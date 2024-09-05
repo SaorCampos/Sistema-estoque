@@ -2,13 +2,15 @@
 
 namespace Tests\Unit\Services\Auth;
 
+use Tests\TestCase;
+use App\Models\User;
+use Tests\Utils\TestUtils;
+use Illuminate\Support\Facades\Auth;
 use App\Core\ApplicationModels\JwtToken;
-use App\Core\Repositories\Auth\IAuthRepository;
+use App\Http\Requests\Auth\LoginAuthRequest;
 use App\Core\Services\Auth\ILoginAuthService;
 use App\Domain\Services\Auth\LoginAuthService;
-use App\Http\Requests\Auth\LoginAuthRequest;
-use Tests\TestCase;
-use Tests\Utils\TestUtils;
+use App\Core\Repositories\Auth\IAuthRepository;
 
 class LoginAuthServiceTest extends TestCase
 {
@@ -30,6 +32,9 @@ class LoginAuthServiceTest extends TestCase
                 ->once()
                 ->andReturn($expectedResultAuthRepository);
         });
+        $user = new User();
+        $user->name = 'Test User';
+        Auth::shouldReceive('user')->andReturn($user);
         $this->sut = new LoginAuthService($authRepository);
         // Act
         $jwtToken = $this->sut->login($request);
@@ -37,6 +42,7 @@ class LoginAuthServiceTest extends TestCase
         $this->assertNotNull($jwtToken);
         $this->assertNotNull($jwtToken->accessToken);
         $this->assertNotNull($jwtToken->expiresIn);
+        $this->assertEquals('Test User', $jwtToken->userName);
     }
 
     /**
