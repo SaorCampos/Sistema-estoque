@@ -1,0 +1,4 @@
+#!/bin/bash
+php artisan test tests/Unit/Repositories
+php artisan test tests/Unit/Services
+php artisan test tests/Feature/
