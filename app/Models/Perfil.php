@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Perfil extends Model
+class Perfil extends Entity
 {
     use HasFactory, HasUuids, SoftDeletes;
 
@@ -17,9 +16,9 @@ class Perfil extends Model
     protected $fillable = [
         'uuid',
         'nome',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        'criado_em',
+        'atualizado_em',
+        'deletado_em',
         'criado_por',
         'atualizado_por'
     ];

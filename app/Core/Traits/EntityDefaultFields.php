@@ -1,15 +1,13 @@
 <?php
 
 namespace App\Core\Traits;
-use DateTime;
 
 trait EntityDefaultFields
 {
-    public int $id;
-    public string $uuid;
-    public bool $ativo;
-    public DateTime $criadoEm;
+    public string $id;
+    public string $criadoEm;
     public string $criadoPor;
-    public DateTime $modificadoEm;
-    public string $modificadoPor;
+    public ?string $atualizadoEm;
+    public string $atualizadoPor;
+    public ?string $deletadoEm;
 }

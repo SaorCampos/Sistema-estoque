@@ -36,7 +36,7 @@ trait AutoMapper
                     break;
                 }
             }
-            if (!$modelPropName) { // All properties of a object must to me mapped
+            if (!$modelPropName) {
                 $className = self::class;
                 throw new Exception("The property $propName could not be mapped in $className from object " . json_encode($entityArr) . '.');
             }

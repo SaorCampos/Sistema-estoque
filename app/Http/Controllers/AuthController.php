@@ -10,16 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    private ILoginAuthService $loginAuthService;
-    private ILogoutAuthService $logoutAuthService;
-
     public function __construct(
-        ILoginAuthService $loginAuthService,
-        ILogoutAuthService $logoutAuthService
-    ) {
-        $this->loginAuthService = $loginAuthService;
-        $this->logoutAuthService = $logoutAuthService;
-    }
+        private ILoginAuthService $loginAuthService,
+        private ILogoutAuthService $logoutAuthService
+    ) {}
 
     public function login(LoginAuthRequest $request): Response
     {
