@@ -5,7 +5,7 @@ namespace App\Http\Requests\Auth;
 use App\Http\Requests\BaseRequest;
 
 /**
- * @property string $email
+ * @property string $name
  * @property string $password
  */
 class LoginAuthRequest extends BaseRequest
@@ -18,7 +18,7 @@ class LoginAuthRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            "email" => "required|email",
+            "name" => "required|string",
             "password" => "required",
         ];
     }

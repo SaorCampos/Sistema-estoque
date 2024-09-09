@@ -18,8 +18,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $perfil = Perfil::factory()->create([
+            'id' => Str::uuid(),
+             'nome' => 'Admin',
+             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
+             'updated_at' =>  fake()->dateTimeBetween('-1 year', 'now'),
+             'deleted_at' => null,
+             'criado_por' => 'Admin',
+             'atualizado_por' => 'Admin',
+        ]);
        $usuario = User::factory()->create([
             'id' => Str::uuid(),
+            'perfil_id' => $perfil->id,
             'name' => 'Admin',
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -28,19 +38,6 @@ class DatabaseSeeder extends Seeder
             'deleted_at' => null,
             'criado_por' => 'Admin',
             'atualizado_por' => 'Admin',
-       ]);
-       $perfil = Perfil::factory()->create([
-           'id' => Str::uuid(),
-            'nome' => 'Admin',
-            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
-            'updated_at' =>  fake()->dateTimeBetween('-1 year', 'now'),
-            'deleted_at' => null,
-            'criado_por' => 'Admin',
-            'atualizado_por' => 'Admin',
-       ]);
-       UsuarioPerfil::factory()->create([
-           'usuario_id' => $usuario->id,
-           'perfil_id' => $perfil->id,
        ]);
     }
 }

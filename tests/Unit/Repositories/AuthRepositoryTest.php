@@ -17,17 +17,14 @@ class AuthRepositoryTest extends TestCase
 
     private IAuthRepository $sut;
 
-    /**
-     * @test
-     */
-    public function login_withValidCredentials_returnsJwtToken(): void
+    public function test_login_withValidCredentials_returnsJwtToken(): void
     {
         // Arrange
         $user = User::factory()->createOne([
             'password' => Hash::make('123456')
         ]);
         $request = new LoginAuthRequest();
-        $request->email = $user->email;
+        $request->name = $user->name;
         $request->password = '123456';
         $this->sut = new AuthRepository();
         // Act
@@ -36,20 +33,19 @@ class AuthRepositoryTest extends TestCase
         $this->assertNotNull($jwtToken);
         $this->assertNotNull($jwtToken->accessToken);
         $this->assertNotNull($jwtToken->expiresIn);
+        $this->assertNotNull($jwtToken->userName);
+        $this->assertNotNull($jwtToken->perfilId);
         $this->assertInstanceOf(JwtToken::class, $jwtToken);
     }
 
-    /**
-     * @test
-     */
-    public function login_withInvalidCredentials_returnsNull(): void
+    public function test_login_withInvalidCredentials_returnsNull(): void
     {
         // Arrange
         $user = User::factory()->createOne([
             'password' => Hash::make('123456')
         ]);
         $request = new LoginAuthRequest();
-        $request->email = $user->email;
+        $request->name = $user->name;
         $request->password = '1234567';
         $this->sut = new AuthRepository();
         // Act

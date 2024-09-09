@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Perfil;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -25,6 +26,7 @@ class UserFactory extends Factory
     {
         return [
             'id' => Str::uuid(),
+            'perfil_id' => Perfil::factory()->createOne()->id,
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

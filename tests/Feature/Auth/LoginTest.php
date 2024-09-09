@@ -4,24 +4,19 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     */
-    public function login_withValidCredentials_returnsJwtToken(): void
+    public function test_login_withValidCredentials_returnsJwtToken(): void
     {
         // Arrange
         $user = User::factory()->createOne();
         // Act
         $response = $this->post(route('auth.login'), [
-            'email' => $user->email,
+            'name' => $user->name,
             'password' => '123456'
         ]);
         // Assert
@@ -33,16 +28,13 @@ class LoginTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function login_withInvalidCredentials_throwsException(): void
+    public function test_login_withInvalidCredentials_throwsException(): void
     {
         // Arrange
         $user = User::factory()->createOne();
         // Act
         $response = $this->post(route('auth.login'), [
-            'email' => $user->email,
+            'name' => $user->name,
             'password' => '1234567'
         ]);
         // Assert

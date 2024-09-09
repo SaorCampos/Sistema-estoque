@@ -8,36 +8,34 @@ use Tests\Utils\TestUtils;
 use Illuminate\Support\Facades\Auth;
 use App\Core\ApplicationModels\JwtToken;
 use App\Http\Requests\Auth\LoginAuthRequest;
-use App\Core\Services\Auth\ILoginAuthService;
 use App\Domain\Services\Auth\LoginAuthService;
 use App\Core\Repositories\Auth\IAuthRepository;
+use Mockery as Mock;
 
 class LoginAuthServiceTest extends TestCase
 {
 
-    private ILoginAuthService $sut;
-    /**
-     * @test
-     */
-    public function login_withValidCredentials_returnsJwtToken(): void
+    protected function tearDown(): void
+    {
+        Mock::close();
+    }
+
+    public function test_login_withValidCredentials_returnsJwtToken(): void
     {
         // Arrange
         $request = new LoginAuthRequest();
-        $request->email = 'test@gmail.com';
+        $request->name = 'Test User';
         $request->password = '12345678';
-        $expectedResultAuthRepository = TestUtils::mockObj(JwtToken::class);
-        /** @var IAuthRepository */
-        $authRepository = $this->mock(IAuthRepository::class, function ($mock) use ($expectedResultAuthRepository) {
-            $mock->shouldReceive('login')
-                ->once()
-                ->andReturn($expectedResultAuthRepository);
-        });
+        $authRepository = Mock::mock(IAuthRepository::class);
+        $authRepository->shouldReceive('login')
+            ->once()
+            ->andReturn(TestUtils::mockObj(JwtToken::class));
+        $service = new LoginAuthService($authRepository);
         $user = new User();
         $user->name = 'Test User';
         Auth::shouldReceive('user')->andReturn($user);
-        $this->sut = new LoginAuthService($authRepository);
         // Act
-        $jwtToken = $this->sut->login($request);
+        $jwtToken = $service->login($request);
         // Assert
         $this->assertNotNull($jwtToken);
         $this->assertNotNull($jwtToken->accessToken);
@@ -45,26 +43,22 @@ class LoginAuthServiceTest extends TestCase
         $this->assertEquals('Test User', $jwtToken->userName);
     }
 
-    /**
-     * @test
-     */
-    public function login_withInvalidCredentials_throwsException(): void
+    public function test_login_withInvalidCredentials_throwsException(): void
     {
         // Arrange
         $request = new LoginAuthRequest();
-        $request->email = '';
+        $request->name = '';
         $request->password = '';
-        /** @var IAuthRepository */
-        $authRepository = $this->mock(IAuthRepository::class, function ($mock) {
-            $mock->shouldReceive('login')
-                ->once()
-                ->andReturn(null);
-        });
-        $this->sut = new LoginAuthService($authRepository);
-        // Act
+        $authRepository = Mock::mock(IAuthRepository::class);
+        $authRepository->shouldReceive('login')
+            ->once()
+            ->andReturn(null);
+        $service = new LoginAuthService($authRepository);
+        // Assert
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Invalid credentials');
         $this->expectExceptionCode(401);
-        $this->sut->login($request);
+        // Act
+        $service->login($request);
     }
 }
