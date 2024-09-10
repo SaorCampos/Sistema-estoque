@@ -17,20 +17,13 @@ class PerfilController extends Controller
 
     public function getPerfis(PerfilListingRequest $request): Response
     {
-        try{
-            $list = $this->perfilListingService->getPerfis(
-                request: $request,
-                pagination: Pagination::createFromRequest($request)
-            );
-            return BaseResponse::builder()
-                ->setData($list)
-                ->setMessage('Perfis Listados com sucesso!')
-                ->response();
-        } catch (\Exception $e) {
-            return BaseResponse::builder()
-                ->setMessage($e->getMessage())
-                ->setStatusCode($e->getCode() ?? 500)
-                ->response();
-        }
+        $list = $this->perfilListingService->getPerfis(
+            request: $request,
+            pagination: Pagination::createFromRequest($request)
+        );
+        return BaseResponse::builder()
+            ->setData($list)
+            ->setMessage('Perfis Listados com sucesso!')
+            ->response();
     }
 }

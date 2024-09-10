@@ -23,7 +23,6 @@ class AuthRepository implements IAuthRepository
         $jwtToken->accessToken = $token;
         $jwtToken->perfilId = $usuario->perfil_id;
         $jwtToken->userName = $usuario->name;
-        $jwtToken->expiresIn = JWTAuth::factory()->getTTL() * 60;
         $jwtToken->permissoes = $usuario->perfil->permissoes->pluck('nome')->toArray();
         return $jwtToken;
     }
