@@ -22,4 +22,9 @@ class Perfil extends Entity
         'criado_por',
         'atualizado_por'
     ];
+
+    public function permissoes()
+    {
+        return $this->belongsToMany(Permissao::class, 'perfil_permissao', 'perfil_id', 'permissao_id');
+    }
 }

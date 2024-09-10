@@ -18,8 +18,13 @@ class Permissao extends Entity
         'nome',
         'criado_em',
         'atualizado_em',
-        'deletado_em',
         'criado_por',
-        'atualizado_por'
+        'atualizado_por',
+        'deletado_em',
     ];
+
+    public function perfis()
+    {
+        return $this->belongsToMany(Perfil::class, 'perfil_permissao', 'permissao_id', 'perfil_id');
+    }
 }

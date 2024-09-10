@@ -11,6 +11,11 @@ Route::middleware('api.jwt')->group(function () {
         Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['api.jwt'])->name('auth.login');
         Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-        Route::get('perfil/listagem', [PerfilController::class, 'getPerfis'])->name('lista.perfis');
+    Route::prefix('perfil')->group(function () {
+        Route::get('listagem', [PerfilController::class, 'getPerfis'])->name('lista.perfis');
+        // Route::post('criar', [PerfilController::class, 'criarPerfil'])->name('criar.perfil');
+        // Route::put('atualizar/{id}', [PerfilController::class, 'atualizarPerfil'])->name('atualizar.perfil');
+        // Route::delete('deletar/{id}', [PerfilController::class, 'deletarPerfil'])->name('deletar.perfil');
+    });
     });
 });

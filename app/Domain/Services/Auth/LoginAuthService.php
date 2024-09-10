@@ -6,6 +6,7 @@ use App\Core\ApplicationModels\JwtToken;
 use App\Core\Repositories\Auth\IAuthRepository;
 use App\Core\Services\Auth\ILoginAuthService;
 use App\Http\Requests\Auth\LoginAuthRequest;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginAuthService implements ILoginAuthService
 {
@@ -16,7 +17,6 @@ class LoginAuthService implements ILoginAuthService
     {
         $jwtToken = $this->authRepository->login($request);
         if (!$jwtToken) throw new \Exception('Invalid credentials', 401);
-        $jwtToken->userName = auth()->user()->name;
         return $jwtToken;
     }
 }

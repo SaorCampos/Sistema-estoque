@@ -2,10 +2,11 @@
 
 namespace App\Data\Repositories\Auth;
 
-use App\Core\ApplicationModels\JwtToken;
-use App\Core\Repositories\Auth\IAuthRepository;
-use App\Http\Requests\Auth\LoginAuthRequest;
 use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Core\ApplicationModels\JwtToken;
+use App\Http\Requests\Auth\LoginAuthRequest;
+use App\Core\Repositories\Auth\IAuthRepository;
 
 class AuthRepository implements IAuthRepository
 {
@@ -17,9 +18,13 @@ class AuthRepository implements IAuthRepository
         ]);
         if (!$token) return null;
         $usuario = User::where('name', $request->name)->first();
+        $usuario->load('perfil.permissoes');
         $jwtToken = new JwtToken();
         $jwtToken->accessToken = $token;
         $jwtToken->perfilId = $usuario->perfil_id;
+        $jwtToken->userName = $usuario->name;
+        $jwtToken->expiresIn = JWTAuth::factory()->getTTL() * 60;
+        $jwtToken->permissoes = $usuario->perfil->permissoes->pluck('nome')->toArray();
         return $jwtToken;
     }
 

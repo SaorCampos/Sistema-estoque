@@ -2,9 +2,14 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Perfil;
+use App\Models\Permissao;
+use App\Models\PerfilPerimissao;
+use Illuminate\Support\Facades\DB;
+use Database\Seeders\PermissaoSeeder;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LoginTest extends TestCase
 {
@@ -13,7 +18,26 @@ class LoginTest extends TestCase
     public function test_login_withValidCredentials_returnsJwtToken(): void
     {
         // Arrange
+        User::truncate();
+        Perfil::truncate();
+        PerfilPerimissao::truncate();
+        Permissao::truncate();
         $user = User::factory()->createOne();
+        $perfil = Perfil::where('id', '=', (string)$user->perfil_id)->first();
+        $this->seed(PermissaoSeeder::class);
+        $permissaoIds = DB::table('permissao')->pluck('id');
+        $perfilUsuarioId = DB::table('perfil')->where('nome', '=', (string)$perfil->nome)->first()->id;
+        $perfilPermissoes = $permissaoIds->map(function ($permissaoId) use ($perfilUsuarioId) {
+            return [
+                'perfil_id' => $perfilUsuarioId,
+                'permissao_id' => $permissaoId,
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+            ];
+        });
+        DB::table('perfil_permissao')->insert($perfilPermissoes->toArray());
         // Act
         $response = $this->post(route('auth.login'), [
             'name' => $user->name,

@@ -11,4 +11,5 @@ class JwtToken implements IArraySerializer
     public string $expiresIn = '';
     public string $userName = '';
     public string $perfilId = '';
+    public array $permissoes = [];
 }

@@ -27,7 +27,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'uuid',
+        'id',
         'name',
         'email',
         'password',
@@ -72,5 +72,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function perfil()
+    {
+        return $this->belongsTo(Perfil::class);
     }
 }
