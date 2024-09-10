@@ -6,7 +6,6 @@ namespace Database\Seeders;
 
 use App\Models\Perfil;
 use App\Models\User;
-use App\Models\UsuarioPerfil;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -39,5 +38,11 @@ class DatabaseSeeder extends Seeder
             'criado_por' => 'Admin',
             'atualizado_por' => 'Admin',
        ]);
+       $this->call(
+        [
+            PermissaoSeeder::class,
+            PerfilPermissaoSeeder::class,
+        ]
+       );
     }
 }

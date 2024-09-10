@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('perimissao', function (Blueprint $table) {
+        Schema::create('permissao', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nome');
             $table->timestamp('criado_em');

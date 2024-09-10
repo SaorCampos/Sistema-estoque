@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('perfil_permissao', function (Blueprint $table) {
             $table->foreignUuid('perfil_id')->constrained('perfil');
-            $table->foreignUuid('permissao_id')->constrained('perimissao');
+            $table->foreignUuid('permissao_id')->constrained('permissao');
             $table->timestamp('criado_em', 100);
             $table->string('criado_por', 100)->nullable();
             $table->timestamp('atualizado_em')->nullable();
