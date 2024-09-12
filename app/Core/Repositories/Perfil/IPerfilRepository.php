@@ -11,6 +11,6 @@ use Illuminate\Support\Collection;
 interface IPerfilRepository
 {
     public function getPerfis(PerfilListingRequest $request, Pagination $pagination): PaginatedList;
-    public function getPermissoesByPerfilId(string $id): Collection;
-    public function getPerfilById(string $id): PerfilDto;
+    public function getPermissoesByPerfilId(string $id): ?Collection;
+    public function getPerfilById(string $id): ?PerfilDto;
 }

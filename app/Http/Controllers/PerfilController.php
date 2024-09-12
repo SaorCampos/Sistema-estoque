@@ -28,10 +28,17 @@ class PerfilController extends Controller
     }
     public function getPermissoesByPerfilId(string $id): Response
     {
-        $list = $this->perfilListingService->getPermissoesByPerfilId($id);
-        return BaseResponse::builder()
+        try{
+            $list = $this->perfilListingService->getPermissoesByPerfilId($id);
+            return BaseResponse::builder()
             ->setData($list)
             ->setMessage('Permissoes Listadas com sucesso!')
             ->response();
+        } catch (\Exception $e) {
+            return BaseResponse::builder()
+            ->setMessage($e->getMessage())
+            ->setStatusCode($e->getCode() ?? Response::HTTP_INTERNAL_SERVER_ERROR)
+            ->response();
+        }
     }
 }

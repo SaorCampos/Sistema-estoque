@@ -38,7 +38,7 @@ class PerfilRepository implements IPerfilRepository
         return $filter;
     }
 
-    public function getPermissoesByPerfilId(string $id): Collection
+    public function getPermissoesByPerfilId(string $id): ?Collection
     {
         $resultCollection = DB::select('
             SELECT
@@ -49,9 +49,13 @@ class PerfilRepository implements IPerfilRepository
             where p.id = :id
         ',
         ['id' => $id]);
+        if(is_null($resultCollection))
+        {
+            return null;
+        }
         return collect($resultCollection);
     }
-    public function getPerfilById(string $id): PerfilDto
+    public function getPerfilById(string $id): ?PerfilDto
     {
         $perfil = Perfil::query()->where('id', '=', $id)->first();
         if(is_null($perfil))

@@ -33,7 +33,7 @@ class PerfilListingService implements IPerfilListingService
         $jwtToken->validateRole('Listar Perfis');
         $perfilDto = $this->perfilRepository->getPerfilById($perfilId);
         if(!$perfilDto){
-            throw new \Exception('Perfil não encontrado');
+            throw new \Exception('Perfil não encontrado', 404);
         }
         $permissoes = $this->perfilRepository->getPermissoesByPerfilId($perfilId);
         $perfilDetalhesDto = new PerfilDetalhesDto($perfilDto, $permissoes);

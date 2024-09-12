@@ -2,14 +2,20 @@
 
 namespace Tests\Unit\Repositories;
 
-use App\Core\ApplicationModels\Pagination;
-use App\Core\Dtos\PerfilDto;
 use Tests\TestCase;
 use App\Models\Perfil;
+use App\Models\Permissao;
+use Illuminate\Support\Str;
+use App\Core\Dtos\PerfilDto;
+use App\Models\PerfilPerimissao;
+use Illuminate\Support\Facades\DB;
+use Database\Seeders\PermissaoSeeder;
+use App\Core\ApplicationModels\Pagination;
+use App\Data\Repositories\Perfil\PerfilRepository;
 use App\Http\Requests\Perfil\PerfilListingRequest;
 use App\Core\Repositories\Perfil\IPerfilRepository;
-use App\Data\Repositories\Perfil\PerfilRepository;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Collection;
 
 class PerfilRepositoryTest extends TestCase
 {
@@ -82,5 +88,54 @@ class PerfilRepositoryTest extends TestCase
             $this->assertInstanceOf(PerfilDto::class, $instance);
             $this->assertEquals($request->perfilId, $instance->id);
         }
+    }
+    public function test_getPerfilById_onExistingRecords_returnsPerfilDto(): void
+    {
+        // Arrange
+        Perfil::truncate();
+        $perfil = Perfil::factory()->createOne();
+        $this->sut = new PerfilRepository();
+        // Act
+        $response = $this->sut->getPerfilById($perfil->id);
+        // Assert
+        $this->assertInstanceOf(PerfilDto::class, $response);
+        $this->assertEquals($perfil->id, $response->id);
+    }
+    public function test_getPerfilById_onNonExistingRecords_returnsNull(): void
+    {
+        // Arrange
+        Perfil::truncate();
+        $this->sut = new PerfilRepository();
+        $id = (string)Str::uuid();
+        // Act
+        $response = $this->sut->getPerfilById($id);
+        // Assert
+        $this->assertNull($response);
+    }
+    public function test_getPermissoesByPerfilId_onExistingRecords_returnsCollection(): void
+    {
+        // Arrange
+        Perfil::truncate();
+        PerfilPerimissao::truncate();
+        Permissao::truncate();
+        $perfil = Perfil::factory()->createOne();
+        $this->seed(PermissaoSeeder::class);
+        $permissaoIds = DB::table('permissao')->pluck('id');
+        $perfilPermissoes = $permissaoIds->map(function ($permissaoId) use ($perfil) {
+            return [
+                'perfil_id' => $perfil->id,
+                'permissao_id' => $permissaoId,
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+            ];
+        });
+        DB::table('perfil_permissao')->insert($perfilPermissoes->toArray());
+        $this->sut = new PerfilRepository();
+        // Act
+        $response = $this->sut->getPermissoesByPerfilId($perfil->id);
+        // Assert
+        $this->assertInstanceOf(Collection::class, $response);
     }
 }
