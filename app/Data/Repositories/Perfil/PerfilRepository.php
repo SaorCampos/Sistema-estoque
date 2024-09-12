@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Core\ApplicationModels\Pagination;
 use App\Core\ApplicationModels\PaginatedList;
-use App\Http\Requests\Perfil\PerfiListingRequest;
 use App\Http\Requests\Perfil\PerfilListingRequest;
 use App\Core\Repositories\Perfil\IPerfilRepository;
 
@@ -51,5 +50,14 @@ class PerfilRepository implements IPerfilRepository
         ',
         ['id' => $id]);
         return collect($resultCollection);
+    }
+    public function getPerfilById(string $id): PerfilDto
+    {
+        $perfil = Perfil::query()->where('id', '=', $id)->first();
+        if(is_null($perfil))
+        {
+            return null;
+        }
+        return $perfil->mapTo(PerfilDto::class);
     }
 }

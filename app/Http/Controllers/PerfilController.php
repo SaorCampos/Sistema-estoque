@@ -26,4 +26,12 @@ class PerfilController extends Controller
             ->setMessage('Perfis Listados com sucesso!')
             ->response();
     }
+    public function getPermissoesByPerfilId(string $id): Response
+    {
+        $list = $this->perfilListingService->getPermissoesByPerfilId($id);
+        return BaseResponse::builder()
+            ->setData($list)
+            ->setMessage('Permissoes Listadas com sucesso!')
+            ->response();
+    }
 }

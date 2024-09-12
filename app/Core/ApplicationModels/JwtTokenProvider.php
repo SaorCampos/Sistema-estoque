@@ -8,30 +8,15 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class JwtTokenProvider
 {
-    private JwtToken $jwtToken;
-
-    public function __construct()
+    public function getJwtToken(): JwtToken
     {
-        if(!auth()->user()){
-            throw new HttpResponseException(response()->json(['error' => 'Token inválido'], 401));
-        }
         $user = JWTAuth::parseToken()->authenticate();
         $token = JWTAuth::getToken();
         $jwtToken = new JwtToken();
-        $jwtToken->accessToken = (string) $token;
+        $jwtToken->accessToken = $token;
         $jwtToken->perfilId = $user->perfil_id;
         $jwtToken->userName = $user->name;
         $jwtToken->permissoes = $user->perfil->permissoes->pluck('nome')->toArray();
-        $this->jwtToken = $jwtToken;
-    }
-
-    public function getJwtToken(): JwtToken
-    {
-        return $this->jwtToken;
-    }
-
-    public function validateRole(string $permissao): void
-    {
-        $this->jwtToken->validateRole($permissao);
+        return $jwtToken;
     }
 }

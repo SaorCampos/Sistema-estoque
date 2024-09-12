@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use App\Providers\DependencyInjection\DependencyInjection;
 use Illuminate\Support\ServiceProvider;
+use App\Core\ApplicationModels\JwtTokenProvider;
+use App\Providers\DependencyInjection\DependencyInjection;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,6 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(JwtTokenProvider::class, function ($app) {
+            return new JwtTokenProvider();
+        });
         DependencyInjection::providers($this->app)->each(function (DependencyInjection $di): void {
             $di->configure();
         });
