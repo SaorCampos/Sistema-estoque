@@ -4,8 +4,10 @@ namespace App\Providers\DependencyInjection;
 
 use App\Core\Repositories\Perfil\IPerfilRepository;
 use App\Core\Services\Perfil\IPerfilListingService;
+use App\Core\Services\Perfil\IPerfilUpdateService;
 use App\Data\Repositories\Perfil\PerfilRepository;
 use App\Domain\Services\Perfil\PerfilListingService;
+use App\Domain\Services\Perfil\PerfilUpdateService;
 
 class PerfilDi extends DependencyInjection
 {
@@ -13,13 +15,14 @@ class PerfilDi extends DependencyInjection
     {
         return [
             [IPerfilListingService::class, PerfilListingService::class],
+            [IPerfilUpdateService::class, PerfilUpdateService::class],
         ];
     }
 
     protected function repositoriesConfigurations(): array
     {
         return [
-            [IPerfilRepository::class, PerfilRepository::class]
+            [IPerfilRepository::class, PerfilRepository::class],
         ];
     }
 }

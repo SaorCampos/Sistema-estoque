@@ -23,6 +23,8 @@ abstract class DependencyInjection
         return collect([
             new AuthDi($app),
             new PerfilDi($app),
+            new PermissaoDi($app),
+            new PerfilPermissaoDi($app),
         ]);
     }
 

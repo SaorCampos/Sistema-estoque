@@ -7,11 +7,14 @@ use App\Core\ApplicationModels\Pagination;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Perfil\PerfilListingRequest;
 use App\Core\Services\Perfil\IPerfilListingService;
+use App\Core\Services\Perfil\IPerfilUpdateService;
+use App\Http\Requests\Perfil\PerfilPermissaoUpdateRequest;
 
 class PerfilController extends Controller
 {
     public function __construct(
         private IPerfilListingService $perfilListingService,
+        private IPerfilUpdateService $perfilUpdateService,
     )
     {}
 
@@ -40,5 +43,13 @@ class PerfilController extends Controller
             ->setStatusCode($e->getCode() ?? Response::HTTP_INTERNAL_SERVER_ERROR)
             ->response();
         }
+    }
+    public function updatePerfil(PerfilPermissaoUpdateRequest $request)
+    {
+        $result = $this->perfilUpdateService->updatePerfil($request);
+        return BaseResponse::builder()
+        ->setMessage('Perfil Atualizado com sucesso!')
+        ->setData($result)
+        ->response();
     }
 }
