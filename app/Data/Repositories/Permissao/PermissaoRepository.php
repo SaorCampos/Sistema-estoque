@@ -16,6 +16,7 @@ class PermissaoRepository implements IPermissaoRepository
     {
         $query = Permissao::query()
             ->where($this->getFilters($request))
+            ->withTrashed()
             ->paginate($pagination->perPage, ['*'], 'page', $pagination->page);
         return PaginatedList::fromPaginatedQuery(
             query: $query,
@@ -53,7 +54,6 @@ class PermissaoRepository implements IPermissaoRepository
     {
         $resultCollection = Permissao::query()
             ->whereIn('id', $ids)
-            ->withTrashed()
             ->get();
         foreach ($resultCollection as $key => $row) {
             $resultCollection[$key] = $row->mapTo(PermissaoDto::class);
