@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class PerfilPerimissao extends Entity
+class PerfilPermissao extends Entity
 {
     protected $table = 'perfil_permissao';
 

@@ -5,7 +5,7 @@ namespace Tests\Unit\Repositories;
 use Tests\TestCase;
 use App\Models\Perfil;
 use App\Models\Permissao;
-use App\Models\PerfilPerimissao;
+use App\Models\PerfilPermissao;
 use Illuminate\Support\Facades\DB;
 use Database\Seeders\PermissaoSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -22,7 +22,7 @@ class PerfilPermissaoRepositoryTest extends TestCase
     {
         // Arrange
         Perfil::truncate();
-        PerfilPerimissao::truncate();
+        PerfilPermissao::truncate();
         Permissao::truncate();
         $perfilForUpdate = Perfil::factory()->createOne()->id;
         $this->seed(PermissaoSeeder::class);
@@ -31,13 +31,13 @@ class PerfilPermissaoRepositoryTest extends TestCase
         // Act
         $result = $this->sut->createPerfilPermissoes($perfilForUpdate,$permissao);
         // Assert
-        $this->assertInstanceOf(PerfilPerimissao::class, $result);
+        $this->assertInstanceOf(PerfilPermissao::class, $result);
     }
     public function test_deletePerfilPermissoes_retunsTrue(): void
     {
         // Arrange
         Perfil::truncate();
-        PerfilPerimissao::truncate();
+        PerfilPermissao::truncate();
         Permissao::truncate();
         $perfilForUpdate = Perfil::factory()->createOne()->id;
         $this->seed(PermissaoSeeder::class);

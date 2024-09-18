@@ -8,7 +8,7 @@ use Tests\Utils\TestUtils;
 use Illuminate\Support\Str;
 use App\Core\Dtos\PerfilDto;
 use App\Core\Dtos\PermissaoDto;
-use App\Models\PerfilPerimissao;
+use App\Models\PerfilPermissao;
 use Illuminate\Support\Collection;
 use App\Core\Dtos\PerfilDetalhesDto;
 use Tests\Utils\DbTransactionsTestUtil;
@@ -230,7 +230,7 @@ class PerfilUpdateServiceTest extends TestCase
         ]);
         $jwtToken->permissoes[] = $permissaoForUpdate1->nome;
         $jwtToken->permissoes[] = $permissaoForUpdate2->nome;
-        $expectedCreateResult = Mock::mock(PerfilPerimissao::class);
+        $expectedCreateResult = Mock::mock(PerfilPermissao::class);
         $perfilDetalhesDto = new PerfilDetalhesDto($perfilForUpdate, $permissoesRequest);
         $jwtTokenProvider->shouldReceive('getJwtToken')
             ->once()
