@@ -14,8 +14,6 @@ use App\Http\Requests\Perfil\PerfilPermissaoUpdateRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Collection;
 
-use function PHPUnit\Framework\isNull;
-
 class PerfilUpdateService implements IPerfilUpdateService
 {
     public function __construct(
@@ -39,8 +37,7 @@ class PerfilUpdateService implements IPerfilUpdateService
         if($perfilForUpdate->nome === 'Admin'){
             throw new HttpResponseException(response()->json(['message' => 'Perfil de Admin não pode ser alterado.'], 400));
         }
-        $this->validateIfAllRequestedPermissoesBelongsToUser($request, $jwtToken);
-        $newPermissoes = $this->permissaoRepository->getPermissoesByIdList($request->permissoesId);
+        $newPermissoes = $this->validateIfAllRequestedPermissoesBelongsToUser($request, $jwtToken);
         $this->dbTransaction->run(function () use ($perfilForUpdate, $newPermissoes){
             foreach ($newPermissoes as $permissao) {
                 $this->perfilPermissaoRepository->createPerfilPermissoes($perfilForUpdate->id, $permissao->id);
@@ -57,7 +54,7 @@ class PerfilUpdateService implements IPerfilUpdateService
             throw new HttpResponseException(response()->json(['message' => 'Permissões duplicadas não são permitidas.'], 400));
         }
     }
-    private function validateIfAllRequestedPermissoesBelongsToUser(PerfilPermissaoUpdateRequest $request, JwtToken $jwtToken)
+    private function validateIfAllRequestedPermissoesBelongsToUser(PerfilPermissaoUpdateRequest $request, JwtToken $jwtToken): Collection
     {
         $permissaoUsuarioLogado = $jwtToken->permissoes;
         $permissoesRequest = $this->permissaoRepository->getPermissoesByIdList($request->permissoesId);
@@ -69,5 +66,6 @@ class PerfilUpdateService implements IPerfilUpdateService
                 throw new HttpResponseException(response()->json(['message' => 'Há uma ou mais permissões que não pertence ao usuário logado.'], 400));
             }
         }
+        return $permissoesRequest;
     }
 }

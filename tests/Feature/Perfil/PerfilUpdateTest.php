@@ -158,6 +158,83 @@ class PerfilUpdateTest extends TestCase
         $response->assertStatus(400);
         $this->assertEquals('Perfil de Admin não pode ser alterado.', $responseBody['message']);
     }
+    public function test_updatePerfil_with_permissoes_that_doesnt_exist_returnsException(): void
+    {
+        // Arrange
+        User::truncate();
+        User::truncate();
+        Perfil::truncate();
+        PerfilPerimissao::truncate();
+        Permissao::truncate();
+        $user = User::factory()->createOne();
+        $perfil = Perfil::where('id', '=', (string)$user->perfil_id)->first();
+        $perfilForUpdate = Perfil::factory()->createOne()->id;
+        $this->seed(PermissaoSeeder::class);
+        $permissaoIds = DB::table('permissao')->pluck('id');
+        $perfilUsuarioId = DB::table('perfil')->where('nome', '=', (string)$perfil->nome)->first()->id;
+        $perfilPermissoes = $permissaoIds->map(function ($permissaoId) use ($perfilUsuarioId) {
+            return [
+                'perfil_id' => $perfilUsuarioId,
+                'permissao_id' => $permissaoId,
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+            ];
+        });
+        DB::table('perfil_permissao')->insert($perfilPermissoes->toArray());
+        $this->actingAs($user, 'jwt');
+        $data = [
+            'perfilId' => (string)$perfilForUpdate,
+            'permissoesId' => [(string)Str::uuid(), (string)Str::uuid()]
+        ];
+        // Act
+        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $responseBody = json_decode($response->getContent(), true);
+        // Assert
+        $response->assertStatus(404);
+        $this->assertEquals('Nenhuma permissão encontrada.', $responseBody['message']);
+    }
+    public function test_updatePerfil_with_inactive_permissoes_returnsException(): void
+    {
+        // Arrange
+        User::truncate();
+        Perfil::truncate();
+        PerfilPerimissao::truncate();
+        Permissao::truncate();
+        $user = User::factory()->createOne();
+        $perfil = Perfil::where('id', '=', (string)$user->perfil_id)->first();
+        $perfilForUpdate = Perfil::factory()->createOne();
+        $this->seed(PermissaoSeeder::class);
+        $permissaoForUpdateId = DB::table('permissao')->where('nome', '=', 'Deletar Perfis')->first()->id;
+        DB::table('permissao')->where('id', '=', $permissaoForUpdateId)->update(['deletado_em' => now()]);
+        $permissaoIds = DB::table('permissao')->pluck('id');
+        $perfilUsuarioId = DB::table('perfil')->where('nome', '=', (string)$perfil->nome)->first()->id;
+        $perfilPermissoes = $permissaoIds->map(function ($permissaoId) use ($perfilUsuarioId) {
+            return [
+                'perfil_id' => $perfilUsuarioId,
+                'permissao_id' => $permissaoId,
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+            ];
+        });
+        DB::table('perfil_permissao')->insert($perfilPermissoes->toArray());
+        $this->actingAs($user, 'jwt');
+        $data = [
+            'perfilId' => (string)$perfilForUpdate->id,
+            'permissoesId' => [
+                (string)$permissaoForUpdateId
+            ]
+        ];
+        // Act
+        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $responseBody = json_decode($response->getContent(), true);
+        // Assert
+        $response->assertStatus(404);
+        $this->assertEquals('Nenhuma permissão encontrada.', $responseBody['message']);
+    }
     public function test_updatePerfil_with_permissoes_that_doesnt_belong_to_user_returnsException(): void
     {
         // Arrange
