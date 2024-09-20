@@ -6,7 +6,6 @@ namespace Database\Seeders;
 
 use App\Models\Perfil;
 use App\Models\User;
-use App\Models\UsuarioPerfil;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -21,9 +20,9 @@ class DatabaseSeeder extends Seeder
         $perfil = Perfil::factory()->create([
             'id' => Str::uuid(),
              'nome' => 'Admin',
-             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
-             'updated_at' =>  fake()->dateTimeBetween('-1 year', 'now'),
-             'deleted_at' => null,
+             'criado_em' => fake()->dateTimeBetween('-1 year', 'now'),
+             'atualizado_em' =>  fake()->dateTimeBetween('-1 year', 'now'),
+             'deletado_em' => null,
              'criado_por' => 'Admin',
              'atualizado_por' => 'Admin',
         ]);
@@ -35,9 +34,15 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
             'remember_token' => Str::random(10),
-            'deleted_at' => null,
+            'deletado_em' => null,
             'criado_por' => 'Admin',
             'atualizado_por' => 'Admin',
        ]);
+       $this->call(
+        [
+            PermissaoSeeder::class,
+            PerfilPermissaoSeeder::class,
+        ]
+       );
     }
 }

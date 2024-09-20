@@ -17,6 +17,9 @@ class User extends Authenticatable implements JWTSubject
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasUuids;
 
     public $incrementing = false;
+    public const CREATED_AT = 'criado_em';
+    public const UPDATED_AT = 'atualizado_em';
+    public const DELETED_AT = 'deletado_em';
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +27,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'uuid',
+        'id',
         'name',
         'email',
         'password',
@@ -69,5 +72,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function perfil()
+    {
+        return $this->belongsTo(Perfil::class);
     }
 }

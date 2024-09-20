@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('perimissao', function (Blueprint $table) {
+        Schema::create('permissao', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nome');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestamp('criado_em');
+            $table->string('criado_por')->nullable();
+            $table->timestamp('atualizado_em')->nullable();
+            $table->string('atualizado_por')->nullable();
+            $table->timestamp('deletado_em')->nullable();
         });
     }
 

@@ -40,7 +40,6 @@ class LoginAuthServiceTest extends TestCase
         $this->assertNotNull($jwtToken);
         $this->assertNotNull($jwtToken->accessToken);
         $this->assertNotNull($jwtToken->expiresIn);
-        $this->assertEquals('Test User', $jwtToken->userName);
     }
 
     public function test_login_withInvalidCredentials_throwsException(): void

@@ -13,11 +13,13 @@ class PerfilFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => Str::uuid(),
+            'id' => (string)Str::uuid(),
             'nome' => $this->faker->name,
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' =>  $this->faker->dateTimeBetween('-1 year', 'now'),
-            'deleted_at' => null,
+            'criado_em' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'criado_por' => $this->faker->name(),
+            'atualizado_em' =>  $this->faker->dateTimeBetween('-1 year', 'now'),
+            'atualizado_por' => $this->faker->name(),
+            'deletado_em' => null,
         ];
     }
 }
