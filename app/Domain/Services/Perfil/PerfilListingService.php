@@ -2,13 +2,14 @@
 
 namespace App\Domain\Services\Perfil;
 
+use App\Core\Dtos\PerfilDetalhesDto;
 use App\Core\ApplicationModels\Pagination;
 use App\Core\ApplicationModels\PaginatedList;
 use App\Core\ApplicationModels\JwtTokenProvider;
-use App\Core\Dtos\PerfilDetalhesDto;
 use App\Http\Requests\Perfil\PerfilListingRequest;
 use App\Core\Repositories\Perfil\IPerfilRepository;
 use App\Core\Services\Perfil\IPerfilListingService;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PerfilListingService implements IPerfilListingService
 {
@@ -33,7 +34,7 @@ class PerfilListingService implements IPerfilListingService
         $jwtToken->validateRole('Listar Perfis');
         $perfilDto = $this->perfilRepository->getPerfilById($perfilId);
         if(!$perfilDto){
-            throw new \Exception('Perfil não encontrado', 404);
+            throw new HttpResponseException(response()->json(['message' => 'Perfil não encontrado.'], 404));
         }
         $permissoes = $this->perfilRepository->getPermissoesByPerfilId($perfilId);
         $perfilDetalhesDto = new PerfilDetalhesDto($perfilDto, $permissoes);

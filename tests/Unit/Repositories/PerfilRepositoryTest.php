@@ -7,7 +7,7 @@ use App\Models\Perfil;
 use App\Models\Permissao;
 use Illuminate\Support\Str;
 use App\Core\Dtos\PerfilDto;
-use App\Models\PerfilPerimissao;
+use App\Models\PerfilPermissao;
 use Illuminate\Support\Facades\DB;
 use Database\Seeders\PermissaoSeeder;
 use App\Core\ApplicationModels\Pagination;
@@ -116,7 +116,7 @@ class PerfilRepositoryTest extends TestCase
     {
         // Arrange
         Perfil::truncate();
-        PerfilPerimissao::truncate();
+        PerfilPermissao::truncate();
         Permissao::truncate();
         $perfil = Perfil::factory()->createOne();
         $this->seed(PermissaoSeeder::class);
