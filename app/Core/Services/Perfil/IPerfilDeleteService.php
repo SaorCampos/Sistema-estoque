@@ -5,7 +5,7 @@ namespace App\Core\Services\Perfil;
 use App\Core\Dtos\PerfilDetalhesDto;
 use App\Http\Requests\Perfil\PerfilPermissaoUpdateRequest;
 
-interface IPerfilUpdateService
+interface IPerfilDeleteService
 {
-    public function updatePermissoesPerfil(PerfilPermissaoUpdateRequest $request): PerfilDetalhesDto;
+    public function deletePerfilPermissoes(PerfilPermissaoUpdateRequest $request): PerfilDetalhesDto;
 }

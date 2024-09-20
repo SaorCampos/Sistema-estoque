@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Support\Models\BaseResponse;
 use App\Core\ApplicationModels\Pagination;
+use App\Core\Services\Perfil\IPerfilDeleteService;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Perfil\PerfilListingRequest;
 use App\Core\Services\Perfil\IPerfilListingService;
@@ -15,6 +16,7 @@ class PerfilController extends Controller
     public function __construct(
         private IPerfilListingService $perfilListingService,
         private IPerfilUpdateService $perfilUpdateService,
+        private IPerfilDeleteService $perfilDeleteService,
     )
     {}
 
@@ -46,9 +48,17 @@ class PerfilController extends Controller
     }
     public function updatePerfil(PerfilPermissaoUpdateRequest $request)
     {
-        $result = $this->perfilUpdateService->updatePerfil($request);
+        $result = $this->perfilUpdateService->updatePermissoesPerfil($request);
         return BaseResponse::builder()
         ->setMessage('Perfil Atualizado com sucesso!')
+        ->setData($result)
+        ->response();
+    }
+    public function deletePerfil(PerfilPermissaoUpdateRequest $request)
+    {
+        $result = $this->perfilDeleteService->deletePerfilPermissoes($request);
+        return BaseResponse::builder()
+        ->setMessage('Permissões do Perfil Removidas com sucesso!')
         ->setData($result)
         ->response();
     }

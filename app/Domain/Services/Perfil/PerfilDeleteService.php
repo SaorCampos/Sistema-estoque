@@ -2,19 +2,19 @@
 
 namespace App\Domain\Services\Perfil;
 
-use App\Core\ApplicationModels\JwtToken;
-use App\Data\Services\IDbTransaction;
-use App\Core\ApplicationModels\JwtTokenProvider;
-use App\Core\Dtos\PerfilDetalhesDto;
-use App\Core\Services\Perfil\IPerfilUpdateService;
-use App\Core\Repositories\Perfil\IPerfilRepository;
-use App\Core\Repositories\Permissao\IPermissaoRepository;
-use App\Core\Repositories\PerfilPermissao\IPerfilPermissaoRepository;
-use App\Http\Requests\Perfil\PerfilPermissaoUpdateRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Collection;
+use App\Core\Dtos\PerfilDetalhesDto;
+use App\Data\Services\IDbTransaction;
+use App\Core\ApplicationModels\JwtToken;
+use App\Core\ApplicationModels\JwtTokenProvider;
+use App\Core\Services\Perfil\IPerfilDeleteService;
+use App\Core\Repositories\Perfil\IPerfilRepository;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Core\Repositories\Permissao\IPermissaoRepository;
+use App\Http\Requests\Perfil\PerfilPermissaoUpdateRequest;
+use App\Core\Repositories\PerfilPermissao\IPerfilPermissaoRepository;
 
-class PerfilUpdateService implements IPerfilUpdateService
+class PerfilDeleteService implements IPerfilDeleteService
 {
     public function __construct(
         private IPerfilRepository $perfilRepository,
@@ -25,27 +25,27 @@ class PerfilUpdateService implements IPerfilUpdateService
     )
     {
     }
-    public function updatePermissoesPerfil(PerfilPermissaoUpdateRequest $request): PerfilDetalhesDto
+    public function deletePerfilPermissoes(PerfilPermissaoUpdateRequest $request): PerfilDetalhesDto
     {
         $jwtToken = $this->jwtTokenProvider->getJwtToken();
-        $jwtToken->validateRole('Editar Perfis');
+        $jwtToken->validateRole('Deletar Perfis');
         $this->validateIfPermissoesAreDistinct($request);
-        $perfilForUpdate = $this->perfilRepository->getPerfilById($request->perfilId);
-        if(!$perfilForUpdate){
+        $perfilForDelete = $this->perfilRepository->getPerfilById($request->perfilId);
+        if(!$perfilForDelete){
             throw new HttpResponseException(response()->json(['message' => 'Perfil não encontrado.'], 404));
         }
-        if($perfilForUpdate->nome === 'Admin'){
+        if($perfilForDelete->nome === 'Admin'){
             throw new HttpResponseException(response()->json(['message' => 'Perfil de Admin não pode ser alterado.'], 400));
         }
-        $newPermissoes = $this->validateIfAllRequestedPermissoesBelongsToUser($request, $jwtToken);
-        $this->dbTransaction->run(function () use ($perfilForUpdate, $newPermissoes){
-            foreach ($newPermissoes as $permissao) {
-                $this->perfilPermissaoRepository->createPerfilPermissoes($perfilForUpdate->id, $permissao->id);
+        $permissoesForRemoval = $this->validateIfAllRequestedPermissoesBelongsToUser($request, $jwtToken);
+        $this->dbTransaction->run(function () use ($perfilForDelete, $permissoesForRemoval){
+            foreach ($permissoesForRemoval as $permissao) {
+                $this->perfilPermissaoRepository->deletePerfilPermissoes($perfilForDelete->id, $permissao->id);
             }
         });
-        $permissoesPerfil = $this->perfilRepository->getPermissoesByPerfilId($perfilForUpdate->id);
-        $perfilUpdated = new PerfilDetalhesDto($perfilForUpdate, $permissoesPerfil);
-        return $perfilUpdated;
+        $permissoesPerfil = $this->perfilRepository->getPermissoesByPerfilId($perfilForDelete->id);
+        $perfil = new PerfilDetalhesDto($perfilForDelete, $permissoesPerfil);
+        return $perfil;
     }
     private function validateIfPermissoesAreDistinct(PerfilPermissaoUpdateRequest $request)
     {

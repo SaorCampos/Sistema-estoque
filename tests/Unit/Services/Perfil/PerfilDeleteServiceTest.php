@@ -8,27 +8,26 @@ use Tests\Utils\TestUtils;
 use Illuminate\Support\Str;
 use App\Core\Dtos\PerfilDto;
 use App\Core\Dtos\PermissaoDto;
-use App\Models\PerfilPermissao;
 use Illuminate\Support\Collection;
 use App\Core\Dtos\PerfilDetalhesDto;
 use Tests\Utils\DbTransactionsTestUtil;
 use App\Core\ApplicationModels\JwtToken;
 use App\Core\ApplicationModels\JwtTokenProvider;
 use App\Core\Repositories\Perfil\IPerfilRepository;
-use App\Domain\Services\Perfil\PerfilUpdateService;
+use App\Domain\Services\Perfil\PerfilDeleteService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Core\Repositories\Permissao\IPermissaoRepository;
 use App\Http\Requests\Perfil\PerfilPermissaoUpdateRequest;
 use App\Core\Repositories\PerfilPermissao\IPerfilPermissaoRepository;
 
-class PerfilUpdateServiceTest extends TestCase
+class PerfilDeleteServiceTest extends TestCase
 {
     protected function tearDown(): void
     {
         Mock::close();
     }
 
-    public function test_updatePerfil_without_permission_throwsException(): void
+    public function test_deletePerfilPermissoes_without_permission_throwsException(): void
     {
         // Arrange
         $perfilRepository = Mock::mock(IPerfilRepository::class);
@@ -44,16 +43,15 @@ class PerfilUpdateServiceTest extends TestCase
             ->once()
             ->andReturn($jwtToken);
         $jwtToken->shouldReceive('validateRole')
-            ->with('Editar Perfis')
+            ->with('Deletar Perfis')
             ->once()
             ->andThrow(\Exception::class);
-        $perfilUpdateService = new PerfilUpdateService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
-        // Assert
+        $perfilDeleteService = new PerfilDeleteService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
         $this->expectException(\Exception::class);
         // Act
-        $perfilUpdateService->updatePermissoesPerfil($request);
+        $perfilDeleteService->deletePerfilPermissoes($request);
     }
-    public function test_updatePerfil_with_non_distinct_permissoes_throwsResponseException(): void
+    public function test_deletePerfilPermissoes_with_non_distinct_permissoes_throwsResponseException(): void
     {
         // Arrange
         $perfilRepository = Mock::mock(IPerfilRepository::class);
@@ -70,15 +68,15 @@ class PerfilUpdateServiceTest extends TestCase
             ->once()
             ->andReturn($jwtToken);
         $jwtToken->shouldReceive('validateRole')
-            ->with('Editar Perfis')
+            ->with('Deletar Perfis')
             ->once();
-        $perfilUpdateService = new PerfilUpdateService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
+        $perfilDeleteService = new PerfilDeleteService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
         // Assert
         $this->expectException(HttpResponseException::class);
         // Act
-        $perfilUpdateService->updatePermissoesPerfil($request);
+        $perfilDeleteService->deletePerfilPermissoes($request);
     }
-    public function test_updatePerfil_when_perfil_doesnt_exist_throwsResponseException(): void
+    public function test_deletePerfilPermissoes_when_perfil_doesnt_exist_throwsResponseException(): void
     {
         // Arrange
         $perfilRepository = Mock::mock(IPerfilRepository::class);
@@ -94,19 +92,19 @@ class PerfilUpdateServiceTest extends TestCase
             ->once()
             ->andReturn($jwtToken);
         $jwtToken->shouldReceive('validateRole')
-            ->with('Editar Perfis')
+            ->with('Deletar Perfis')
             ->once();
         $perfilRepository->shouldReceive('getPerfilById')
             ->with($request->perfilId)
             ->once()
             ->andReturn(null);
-        $perfilUpdateService = new PerfilUpdateService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
+        $perfilDeleteService = new PerfilDeleteService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
         // Assert
         $this->expectException(HttpResponseException::class);
         // Act
-        $perfilUpdateService->updatePermissoesPerfil($request);
+        $perfilDeleteService->deletePerfilPermissoes($request);
     }
-    public function test_updatePerfil_trying_to_update_perfil_admin_throwsException(): void
+    public function test_deletePerfilPermissoes_on_adminProfile_throwsException(): void
     {
         // Arrange
         $perfilRepository = Mock::mock(IPerfilRepository::class);
@@ -115,8 +113,8 @@ class PerfilUpdateServiceTest extends TestCase
         $dbTransaction = new DbTransactionsTestUtil();
         $jwtToken = Mock::mock(JwtToken::class);
         $jwtTokenProvider = Mock::mock(JwtTokenProvider::class);
-        $perfilForUpdate = TestUtils::mockObj(PerfilDto::class);
-        $perfilForUpdate->nome = 'Admin';
+        $perfilForDelete = TestUtils::mockObj(PerfilDto::class);
+        $perfilForDelete->nome = 'Admin';
         $request = new PerfilPermissaoUpdateRequest();
         $request->perfilId = (string)Str::uuid();
         $request->permissoesId = [(string)Str::uuid(), (string)Str::uuid()];
@@ -124,19 +122,19 @@ class PerfilUpdateServiceTest extends TestCase
             ->once()
             ->andReturn($jwtToken);
         $jwtToken->shouldReceive('validateRole')
-            ->with('Editar Perfis')
+            ->with('Deletar Perfis')
             ->once();
         $perfilRepository->shouldReceive('getPerfilById')
             ->with($request->perfilId)
             ->once()
-            ->andReturn($perfilForUpdate);
-        $perfilUpdateService = new PerfilUpdateService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
+            ->andReturn($perfilForDelete);
+        $perfilDeleteService = new PerfilDeleteService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
         // Assert
         $this->expectException(HttpResponseException::class);
         // Act
-        $perfilUpdateService->updatePermissoesPerfil($request);
+        $perfilDeleteService->deletePerfilPermissoes($request);
     }
-    public function test_updatePerfil_with_permissoes_that_doesnt_exist_throwsException(): void
+    public function test_deletePerfilPermissoes_with_permissoes_that_doesnt_exist_throwsException(): void
     {
         // Arrange
         $perfilRepository = Mock::mock(IPerfilRepository::class);
@@ -145,32 +143,32 @@ class PerfilUpdateServiceTest extends TestCase
         $dbTransaction = new DbTransactionsTestUtil();
         $jwtToken = Mock::mock(JwtToken::class);
         $jwtTokenProvider = Mock::mock(JwtTokenProvider::class);
-        $perfilForUpdate = TestUtils::mockObj(PerfilDto::class);
+        $perfilForDelete = TestUtils::mockObj(PerfilDto::class);
         $request = new PerfilPermissaoUpdateRequest();
-        $request->perfilId = (string)$perfilForUpdate->id;
+        $request->perfilId = (string)$perfilForDelete->id;
         $request->permissoesId = [(string)Str::uuid(), (string)Str::uuid()];
-        $permissaoForUpdateCollection = Mock::mock(Collection::empty());
+        $permissaoForDeleteCollection = Mock::mock(Collection::empty());
         $jwtTokenProvider->shouldReceive('getJwtToken')
             ->once()
             ->andReturn($jwtToken);
         $jwtToken->shouldReceive('validateRole')
-            ->with('Editar Perfis')
+            ->with('Deletar Perfis')
             ->once();
         $perfilRepository->shouldReceive('getPerfilById')
             ->with($request->perfilId)
             ->once()
-            ->andReturn($perfilForUpdate);
+            ->andReturn($perfilForDelete);
         $permissaoRepository->shouldReceive('getPermissoesByIdList')
             ->with($request->permissoesId)
             ->once()
-            ->andReturn($permissaoForUpdateCollection);
-        $perfilUpdateService = new PerfilUpdateService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
+            ->andReturn($permissaoForDeleteCollection);
+        $perfilDeleteService = new PerfilDeleteService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
         // Assert
         $this->expectException(HttpResponseException::class);
         // Act
-        $perfilUpdateService->updatePermissoesPerfil($request);
+        $perfilDeleteService->deletePerfilPermissoes($request);
     }
-    public function test_updatePerfil_with_permissoes_that_doesnt_belong_to_user_throwsException(): void
+    public function test_deletePerfilPermissoes_with_permissoes_that_doesnt_belong_to_user_throwsException(): void
     {
         // Arrange
         $perfilRepository = Mock::mock(IPerfilRepository::class);
@@ -179,12 +177,12 @@ class PerfilUpdateServiceTest extends TestCase
         $dbTransaction = new DbTransactionsTestUtil();
         $jwtToken = Mock::mock(JwtToken::class);
         $jwtTokenProvider = Mock::mock(JwtTokenProvider::class);
-        $perfilForUpdate = TestUtils::mockObj(PerfilDto::class);
-        $permissaoForUpdate1 = TestUtils::mockObj(PermissaoDto::class);
-        $permissaoForUpdate2 = TestUtils::mockObj(PermissaoDto::class);
+        $perfilForDelete = TestUtils::mockObj(PerfilDto::class);
         $request = new PerfilPermissaoUpdateRequest();
-        $request->perfilId = (string)$perfilForUpdate->id;
-        $request->permissoesId = [(string)$permissaoForUpdate1->id, (string)$permissaoForUpdate2->id];
+        $permissaoForDelete1 = TestUtils::mockObj(PermissaoDto::class);
+        $permissaoForDelete2 = TestUtils::mockObj(PermissaoDto::class);
+        $request->perfilId = (string)$perfilForDelete->id;
+        $request->permissoesId = [(string)$permissaoForDelete1->id, (string)$permissaoForDelete2->id];
         $permissoesRequest = collect([
             (object)['nome' => 'Permissao 3'],
             (object)['nome' => 'Permissao 2'],
@@ -193,23 +191,23 @@ class PerfilUpdateServiceTest extends TestCase
             ->once()
             ->andReturn($jwtToken);
         $jwtToken->shouldReceive('validateRole')
-            ->with('Editar Perfis')
+            ->with('Deletar Perfis')
             ->once();
         $perfilRepository->shouldReceive('getPerfilById')
             ->with($request->perfilId)
             ->once()
-            ->andReturn($perfilForUpdate);
+            ->andReturn($perfilForDelete);
         $permissaoRepository->shouldReceive('getPermissoesByIdList')
             ->with($request->permissoesId)
             ->once()
             ->andReturn($permissoesRequest);
-        $perfilUpdateService = new PerfilUpdateService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
+        $perfilDeleteService = new PerfilDeleteService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
         // Assert
         $this->expectException(HttpResponseException::class);
         // Act
-        $perfilUpdateService->updatePermissoesPerfil($request);
+        $perfilDeleteService->deletePerfilPermissoes($request);
     }
-    public function test_updatePerfil_successfully_returnsPerfilDetalhesDto(): void
+    public function test_deletePerfilPermissoes_successfully_returnsPerfilDetalhesDto(): void
     {
         // Arrange
         $perfilRepository = Mock::mock(IPerfilRepository::class);
@@ -218,32 +216,31 @@ class PerfilUpdateServiceTest extends TestCase
         $dbTransaction = new DbTransactionsTestUtil();
         $jwtToken = Mock::mock(JwtToken::class);
         $jwtTokenProvider = Mock::mock(JwtTokenProvider::class);
-        $perfilForUpdate = TestUtils::mockObj(PerfilDto::class);
-        $permissaoForUpdate1 = TestUtils::mockObj(PermissaoDto::class);
-        $permissaoForUpdate2 = TestUtils::mockObj(PermissaoDto::class);
+        $perfilForDelete = TestUtils::mockObj(PerfilDto::class);
         $request = new PerfilPermissaoUpdateRequest();
-        $request->perfilId = (string)$perfilForUpdate->id;
-        $request->permissoesId = [(string)$permissaoForUpdate1->id, (string)$permissaoForUpdate2->id];
+        $permissaoForDelete1 = TestUtils::mockObj(PermissaoDto::class);
+        $permissaoForDelete2 = TestUtils::mockObj(PermissaoDto::class);
+        $request->perfilId = (string)$perfilForDelete->id;
+        $request->permissoesId = [(string)$permissaoForDelete1->id, (string)$permissaoForDelete2->id];
         $permissoesRequest = collect([
-            $permissaoForUpdate1,
-            $permissaoForUpdate2,
+            $permissaoForDelete1,
+            $permissaoForDelete2,
         ]);
-        $jwtToken->permissoes[] = $permissaoForUpdate1->nome;
-        $jwtToken->permissoes[] = $permissaoForUpdate2->nome;
-        $expectedCreateResult = Mock::mock(PerfilPermissao::class);
-        $perfilDetalhesDto = new PerfilDetalhesDto($perfilForUpdate, $permissoesRequest);
+        $jwtToken->permissoes[] = $permissaoForDelete1->nome;
+        $jwtToken->permissoes[] = $permissaoForDelete2->nome;
+        $perfilDetalhesDto = new PerfilDetalhesDto($perfilForDelete, $permissoesRequest);
         $jwtTokenProvider->shouldReceive('getJwtToken')
             ->once()
             ->andReturn($jwtToken);
         $jwtToken->shouldReceive('validateRole')
-            ->with('Editar Perfis')
+            ->with('Deletar Perfis')
             ->once();
-        $perfilRepository->shouldReceive('getPerfilById')
+            $perfilRepository->shouldReceive('getPerfilById')
             ->with($request->perfilId)
             ->once()
-            ->andReturn($perfilForUpdate);
+            ->andReturn($perfilForDelete);
         $perfilRepository->shouldReceive('getPermissoesByPerfilId')
-            ->with($perfilForUpdate->id)
+            ->with($perfilForDelete->id)
             ->once()
             ->andReturn($permissoesRequest);
         $permissaoRepository->shouldReceive('getPermissoesByIdList')
@@ -251,11 +248,11 @@ class PerfilUpdateServiceTest extends TestCase
             ->andReturn($permissoesRequest);
         $permissaoRepository->shouldReceive('getPermissoesByPerfilId')
             ->andReturn($perfilDetalhesDto);
-        $perfilPermissaoRepository->shouldReceive('createPerfilPermissoes')
-            ->andReturn($expectedCreateResult);
-        $perfilUpdateService = new PerfilUpdateService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
+        $perfilPermissaoRepository->shouldReceive('deletePerfilPermissoes')
+            ->andReturn(true);
+        $perfilDeleteService = new PerfilDeleteService($perfilRepository, $permissaoRepository, $perfilPermissaoRepository, $dbTransaction, $jwtTokenProvider);
         // Act
-        $result = $perfilUpdateService->updatePermissoesPerfil($request);
+        $result = $perfilDeleteService->deletePerfilPermissoes($request);
         // Assert
         $this->assertEquals($perfilDetalhesDto, $result);
     }
