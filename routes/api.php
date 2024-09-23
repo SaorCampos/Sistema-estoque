@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\PermissaoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,5 +17,8 @@ Route::middleware('api.jwt')->group(function () {
         Route::get('listagem/{id}', [PerfilController::class, 'getPermissoesByPerfilId']);
         Route::put('atualizar', [PerfilController::class, 'updatePerfil'])->name('atualizar.perfil.permissoes');
         Route::delete('deletar', [PerfilController::class, 'deletePerfil'])->name('deletar.perfil.permissoes');
+    });
+    Route::prefix('permissao')->group(function () {
+        Route::get('listagem', [PermissaoController::class, 'getPermissoes'])->name('lista.permissoes');
     });
 });
