@@ -160,7 +160,7 @@ class PerfilUpdateServiceTest extends TestCase
             ->with($request->perfilId)
             ->once()
             ->andReturn($perfilForUpdate);
-        $permissaoRepository->shouldReceive('getPermissoesByIdList')
+        $permissaoRepository->shouldReceive('getPermissoesAtivasByIdList')
             ->with($request->permissoesId)
             ->once()
             ->andReturn($permissaoForUpdateCollection);
@@ -199,7 +199,7 @@ class PerfilUpdateServiceTest extends TestCase
             ->with($request->perfilId)
             ->once()
             ->andReturn($perfilForUpdate);
-        $permissaoRepository->shouldReceive('getPermissoesByIdList')
+        $permissaoRepository->shouldReceive('getPermissoesAtivasByIdList')
             ->with($request->permissoesId)
             ->once()
             ->andReturn($permissoesRequest);
@@ -246,7 +246,7 @@ class PerfilUpdateServiceTest extends TestCase
             ->with($perfilForUpdate->id)
             ->once()
             ->andReturn($permissoesRequest);
-        $permissaoRepository->shouldReceive('getPermissoesByIdList')
+        $permissaoRepository->shouldReceive('getPermissoesAtivasByIdList')
             ->with($request->permissoesId)
             ->andReturn($permissoesRequest);
         $permissaoRepository->shouldReceive('getPermissoesByPerfilId')

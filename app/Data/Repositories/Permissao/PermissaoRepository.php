@@ -38,10 +38,6 @@ class PermissaoRepository implements IPermissaoRepository
         return $filter;
     }
 
-    public function createPermissao(Permissao $permissao): Permissao
-    {
-        return Permissao::query()->create($permissao->toArray());
-    }
     public function updatePermissao(string $id, Permissao $permissao): bool
     {
         return Permissao::where('id', '=', $id)->update($permissao->toArray());
@@ -50,10 +46,21 @@ class PermissaoRepository implements IPermissaoRepository
     {
         return Permissao::where('id', '=', $id)->delete();
     }
-    public function getPermissoesByIdList(array $ids): Collection
+    public function getPermissoesAtivasByIdList(array $ids): Collection
     {
         $resultCollection = Permissao::query()
             ->whereIn('id', $ids)
+            ->get();
+        foreach ($resultCollection as $key => $row) {
+            $resultCollection[$key] = $row->mapTo(PermissaoDto::class);
+        }
+        return $resultCollection;
+    }
+    public function getAllPermissoesByIdList(array $ids): Collection
+    {
+        $resultCollection = Permissao::query()
+            ->whereIn('id', $ids)
+            ->withTrashed()
             ->get();
         foreach ($resultCollection as $key => $row) {
             $resultCollection[$key] = $row->mapTo(PermissaoDto::class);

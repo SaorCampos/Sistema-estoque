@@ -39,17 +39,6 @@ class PermissaoRepositoryTest extends TestCase
             $this->assertInstanceOf(PermissaoDto::class, $instance);
         }
     }
-    public function test_createPermissao_returnsPermissao(): void
-    {
-        // Arrange
-        Permissao::truncate();
-        $permissao = Permissao::factory()->make();
-        $this->sut = new PermissaoRepository();
-        // Act
-        $response = $this->sut->createPermissao($permissao);
-        // Assert
-        $this->assertInstanceOf(Permissao::class, $response);
-    }
     public function test_updatePermissao_returnsTrue(): void
     {
         // Arrange
@@ -73,7 +62,7 @@ class PermissaoRepositoryTest extends TestCase
         // Assert
         $this->assertTrue($response);
     }
-    public function test_getPermissoesByIdList_returnsCollection(): void
+    public function test_getPermissoesAtivasByIdList_returnsCollection(): void
     {
         // Arrange
         Permissao::truncate();
@@ -83,7 +72,24 @@ class PermissaoRepositoryTest extends TestCase
         $ids = [$permissao1, $permissao2];
         $this->sut = new PermissaoRepository();
         // Act
-        $response = $this->sut->getPermissoesByIdList($ids);
+        $response = $this->sut->getPermissoesAtivasByIdList($ids);
+        // Assert
+        $this->assertInstanceOf(Collection::class, $response);
+        foreach($response as $instance){
+            $this->assertInstanceOf(PermissaoDto::class, $instance);
+        }
+    }
+    public function test_getAllPermissoesByIdList_returnsCollection(): void
+    {
+        // Arrange
+        Permissao::truncate();
+        $this->seed(PermissaoSeeder::class);
+        $permissao1 = DB::table('permissao')->where('nome', '=', 'Editar Perfis')->first()->id;
+        $permissao2 = DB::table('permissao')->where('nome', '=', 'Deletar Perfis')->first()->id;
+        $ids = [$permissao1, $permissao2];
+        $this->sut = new PermissaoRepository();
+        // Act
+        $response = $this->sut->getAllPermissoesByIdList($ids);
         // Assert
         $this->assertInstanceOf(Collection::class, $response);
         foreach($response as $instance){
