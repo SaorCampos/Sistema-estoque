@@ -158,7 +158,7 @@ class PerfilDeleteServiceTest extends TestCase
             ->with($request->perfilId)
             ->once()
             ->andReturn($perfilForDelete);
-        $permissaoRepository->shouldReceive('getPermissoesByIdList')
+        $permissaoRepository->shouldReceive('getPermissoesAtivasByIdList')
             ->with($request->permissoesId)
             ->once()
             ->andReturn($permissaoForDeleteCollection);
@@ -197,7 +197,7 @@ class PerfilDeleteServiceTest extends TestCase
             ->with($request->perfilId)
             ->once()
             ->andReturn($perfilForDelete);
-        $permissaoRepository->shouldReceive('getPermissoesByIdList')
+        $permissaoRepository->shouldReceive('getPermissoesAtivasByIdList')
             ->with($request->permissoesId)
             ->once()
             ->andReturn($permissoesRequest);
@@ -243,7 +243,7 @@ class PerfilDeleteServiceTest extends TestCase
             ->with($perfilForDelete->id)
             ->once()
             ->andReturn($permissoesRequest);
-        $permissaoRepository->shouldReceive('getPermissoesByIdList')
+        $permissaoRepository->shouldReceive('getPermissoesAtivasByIdList')
             ->with($request->permissoesId)
             ->andReturn($permissoesRequest);
         $permissaoRepository->shouldReceive('getPermissoesByPerfilId')

@@ -57,7 +57,7 @@ class PerfilUpdateService implements IPerfilUpdateService
     private function validateIfAllRequestedPermissoesBelongsToUser(PerfilPermissaoUpdateRequest $request, JwtToken $jwtToken): Collection
     {
         $permissaoUsuarioLogado = $jwtToken->permissoes;
-        $permissoesRequest = $this->permissaoRepository->getPermissoesByIdList($request->permissoesId);
+        $permissoesRequest = $this->permissaoRepository->getPermissoesAtivasByIdList($request->permissoesId);
         if($permissoesRequest->isEmpty()){
             throw new HttpResponseException(response()->json(['message' => 'Nenhuma permissão encontrada.'], 404));
         }
