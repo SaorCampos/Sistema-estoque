@@ -20,6 +20,7 @@ Route::middleware('api.jwt')->group(function () {
     });
     Route::prefix('permissao')->group(function () {
         Route::get('listagem', [PermissaoController::class, 'getPermissoes'])->name('lista.permissoes');
-        RoutE::put('ativar', [PermissaoController::class, 'ativarPermissoes'])->name('ativar.permissoes');
+        Route::put('ativar', [PermissaoController::class, 'ativarPermissoes'])->name('ativar.permissoes');
+        Route::delete('deletar', [PermissaoController::class, 'desativarPermissoes'])->name('deletar.permissoes');
     });
 });

@@ -62,15 +62,15 @@ class PermissaoSeeder extends Seeder
                 'atualizado_em' => now(),
                 'deletado_em' => null
             ],
-            [
-                'id' => Str::uuid(),
-                'nome' => 'Criar Permissões',
-                'criado_por' => 'Admin',
-                'criado_em' => now(),
-                'atualizado_por' => 'Admin',
-                'atualizado_em' => now(),
-                'deletado_em' => null
-            ],
+            // [
+            //     'id' => Str::uuid(),
+            //     'nome' => 'Criar Permissões',
+            //     'criado_por' => 'Admin',
+            //     'criado_em' => now(),
+            //     'atualizado_por' => 'Admin',
+            //     'atualizado_em' => now(),
+            //     'deletado_em' => null
+            // ],
             [
                 'id' => Str::uuid(),
                 'nome' => 'Editar Permissões',

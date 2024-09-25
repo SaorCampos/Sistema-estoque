@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Support\Models\BaseResponse;
 use App\Core\ApplicationModels\Pagination;
+use App\Core\Services\Permissao\IPermissaoDeleteService;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Permissao\PermissaoListingRequest;
 use App\Core\Services\Permissao\IPermissaoListingService;
@@ -15,6 +16,7 @@ class PermissaoController extends Controller
     public function __construct(
         private IPermissaoListingService $permissaoListingService,
         private IPermissaoUpdateService $permissaoUpdateService,
+        private IPermissaoDeleteService $permissaoDeleteService,
     )
     {
     }
@@ -35,6 +37,14 @@ class PermissaoController extends Controller
         $result = $this->permissaoUpdateService->ativarPermissao($request);
         return BaseResponse::builder()
             ->setMessage('Permissões Atualizadas com sucesso!')
+            ->setData($result)
+            ->response();
+    }
+    public function desativarPermissoes(PermissaoUpdateRequest $request)
+    {
+        $result = $this->permissaoDeleteService->desativarPermissao($request);
+        return BaseResponse::builder()
+            ->setMessage('Permissões Desativadas com sucesso!')
             ->setData($result)
             ->response();
     }
