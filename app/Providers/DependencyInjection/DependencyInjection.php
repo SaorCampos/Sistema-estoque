@@ -8,14 +8,13 @@ use Illuminate\Support\Collection;
 
 abstract class DependencyInjection
 {
-    private Application $app;
-
     abstract protected function repositoriesConfigurations(): array;
     abstract protected function servicesConfiguration(): array;
 
-    public function __construct(Application $app)
+    public function __construct(
+        private Application $app
+    )
     {
-        $this->app = $app;
     }
 
     public static function providers(Application $app): Collection
@@ -25,6 +24,7 @@ abstract class DependencyInjection
             new PerfilDi($app),
             new PermissaoDi($app),
             new PerfilPermissaoDi($app),
+            new UsuarioDi($app),
         ]);
     }
 

@@ -12,5 +12,7 @@ class UsuarioDto implements IArraySerializer
     use ArraySerializer, EntityDefaultFields, AutoMapper;
 
     public string $nome;
+    public string $perfilId;
+    public string $perfilNome;
     public string $email;
 }
