@@ -3,8 +3,10 @@
 namespace App\Providers\DependencyInjection;
 
 use App\Core\Repositories\Usuario\IUsuarioRepository;
+use App\Core\Services\Usuario\IUsuarioCreateService;
 use App\Core\Services\Usuario\IUsuarioListingService;
 use App\Data\Repositories\Usuario\UsuarioRepository;
+use App\Domain\Services\Usuario\UsuarioCreateService;
 use App\Domain\Services\Usuario\UsuarioListingService;
 
 class UsuarioDi extends DependencyInjection
@@ -13,6 +15,7 @@ class UsuarioDi extends DependencyInjection
     {
         return [
             [IUsuarioListingService::class, UsuarioListingService::class],
+            [IUsuarioCreateService::class, UsuarioCreateService::class],
         ];
     }
 

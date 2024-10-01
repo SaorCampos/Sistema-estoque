@@ -8,8 +8,6 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Core\ApplicationModels\IObjAutoMapper;
-use App\Core\ApplicationModels\IArraySerializer;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

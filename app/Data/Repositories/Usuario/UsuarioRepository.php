@@ -8,7 +8,6 @@ use App\Core\Dtos\UsuarioDto;
 use App\Core\Repositories\Usuario\IUsuarioRepository;
 use App\Http\Requests\Usuario\UsuarioListingRequest;
 use App\Models\User;
-use Illuminate\Support\Arr;
 
 class UsuarioRepository implements IUsuarioRepository
 {

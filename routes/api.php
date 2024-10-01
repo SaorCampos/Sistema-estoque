@@ -26,5 +26,6 @@ Route::middleware('api.jwt')->group(function () {
     });
     Route::prefix('usuario')->group(function () {
         Route::get('listagem', [UsuarioController::class, 'getUsuarios'])->name('lista.usuarios');
+        Route::post('criar', [UsuarioController::class, 'createUsuario'])->name('criar.usuario');
     });
 });
