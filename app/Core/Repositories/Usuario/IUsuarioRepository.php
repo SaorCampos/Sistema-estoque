@@ -15,4 +15,5 @@ interface IUsuarioRepository
     public function createUsuario(User $usuario): User;
     public function updateUsuario(string $id, User $usuario): bool;
     public function deleteUsuario(string $id): bool;
+    public function getUsuarioByEmail(string $email): ?UsuarioDto;
 }

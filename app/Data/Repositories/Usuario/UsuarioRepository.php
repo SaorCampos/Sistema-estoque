@@ -85,4 +85,28 @@ class UsuarioRepository implements IUsuarioRepository
     {
         return User::where('id', $id)->delete();
     }
+    public function getUsuarioByEmail(string $email): ?UsuarioDto
+    {
+        $usuario = User::from('users as u')
+            ->join('perfil as p', 'p.id', '=', 'u.perfil_id')
+            ->withTrashed()
+            ->select([
+                'u.id',
+                'u.name as nome',
+                'p.id as perfilId',
+                'p.nome as perfilNome',
+                'u.email',
+                'u.criado_em',
+                'u.atualizado_em',
+                'u.criado_por',
+                'u.atualizado_por',
+                'u.deletado_em',
+            ])
+            ->where('u.email', $email)
+            ->first();
+        if(is_null($usuario)){
+            return null;
+        }
+        return $usuario->mapTo(UsuarioDto::class);
+    }
 }
