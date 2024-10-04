@@ -8,6 +8,7 @@ use App\Core\Dtos\UsuarioDto;
 use App\Core\Repositories\Usuario\IUsuarioRepository;
 use App\Http\Requests\Usuario\UsuarioListingRequest;
 use App\Models\User;
+use Illuminate\Support\Collection;
 
 class UsuarioRepository implements IUsuarioRepository
 {
@@ -108,5 +109,29 @@ class UsuarioRepository implements IUsuarioRepository
             return null;
         }
         return $usuario->mapTo(UsuarioDto::class);
+    }
+    public function getUsuariosByIdList(array $ids): Collection
+    {
+        $resultCollection = User::from('users as u')
+            ->join('perfil as p', 'p.id', '=', 'u.perfil_id')
+            ->withTrashed()
+            ->select([
+                'u.id',
+                'u.name as nome',
+                'p.id as perfilId',
+                'p.nome as perfilNome',
+                'u.email',
+                'u.criado_em',
+                'u.atualizado_em',
+                'u.criado_por',
+                'u.atualizado_por',
+                'u.deletado_em',
+            ])
+            ->whereIn('u.id', $ids)
+            ->get();
+        foreach ($resultCollection as $key => $row) {
+            $resultCollection[$key] = $row->mapTo(UsuarioDto::class);
+        }
+        return $resultCollection;
     }
 }

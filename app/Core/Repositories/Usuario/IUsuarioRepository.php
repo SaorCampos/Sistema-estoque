@@ -7,6 +7,7 @@ use App\Core\ApplicationModels\Pagination;
 use App\Core\Dtos\UsuarioDto;
 use App\Http\Requests\Usuario\UsuarioListingRequest;
 use App\Models\User;
+use Illuminate\Support\Collection;
 
 interface IUsuarioRepository
 {
@@ -16,4 +17,5 @@ interface IUsuarioRepository
     public function updateUsuario(string $id, User $usuario): bool;
     public function deleteUsuario(string $id): bool;
     public function getUsuarioByEmail(string $email): ?UsuarioDto;
+    public function getUsuariosByIdList(array $ids): Collection;
 }

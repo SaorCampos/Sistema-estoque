@@ -6,11 +6,13 @@ use App\Support\Models\BaseResponse;
 use App\Core\ApplicationModels\Pagination;
 use App\Core\Services\Usuario\IUsuarioAlterarSenhaService;
 use App\Core\Services\Usuario\IUsuarioCreateService;
+use App\Core\Services\Usuario\IUsuarioDeleteService;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Usuario\UsuarioListingRequest;
 use App\Core\Services\Usuario\IUsuarioListingService;
 use App\Http\Requests\Usuario\UsuarioAlterarSenhaRequest;
 use App\Http\Requests\Usuario\UsuarioCreateRequest;
+use App\Http\Requests\Usuario\UsuarioDeleteRequest;
 
 class UsuarioController extends Controller
 {
@@ -18,6 +20,7 @@ class UsuarioController extends Controller
         private IUsuarioListingService $usuarioListingService,
         private IUsuarioCreateService $usuarioCreateService,
         private IUsuarioAlterarSenhaService $usuarioAlterarSenhaService,
+        private IUsuarioDeleteService $usuarioDeleteService,
     )
     {
     }
@@ -55,6 +58,22 @@ class UsuarioController extends Controller
             ->setData($usuario)
             ->setStatusCode(Response::HTTP_BAD_REQUEST)
             ->setMessage('Erro ao alterar a senha!')
+            ->response();
+    }
+    public function deletarUsuarios(UsuarioDeleteRequest $request): Response
+    {
+        $usuario = $this->usuarioDeleteService->deletarUsuarios($request);
+        if($usuario === true){
+            return BaseResponse::builder()
+                ->setData($usuario)
+                ->setStatusCode(Response::HTTP_OK)
+                ->setMessage('Usuarios deletados com sucesso!')
+                ->response();
+        }
+        return BaseResponse::builder()
+            ->setData($usuario)
+            ->setStatusCode(Response::HTTP_BAD_REQUEST)
+            ->setMessage('Erro ao deletar usuarios!')
             ->response();
     }
 }

@@ -13,6 +13,7 @@ use App\Data\Repositories\Usuario\UsuarioRepository;
 use App\Http\Requests\Usuario\UsuarioListingRequest;
 use App\Core\Repositories\Usuario\IUsuarioRepository;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Collection;
 
 class UsuarioRepositoryTest extends TestCase
 {
@@ -174,5 +175,46 @@ class UsuarioRepositoryTest extends TestCase
         $response = $this->sut->deleteUsuario($id);
         // Assert
         $this->assertFalse($response);
+    }
+    public function test_getUsuarioByEmail_onExistingRecords_returnsUsuarioDto(): void
+    {
+        // Arrange
+        User::truncate();
+        $usuario = User::factory()->createOne();
+        $this->sut = new UsuarioRepository();
+        // Act
+        $response = $this->sut->getUsuarioByEmail($usuario->email);
+        // Assert
+        $this->assertInstanceOf(UsuarioDto::class, $response);
+        $this->assertEquals($usuario->id, $response->id);
+        $this->assertEquals($usuario->name, $response->nome);
+        $this->assertEquals($usuario->email, $response->email);
+    }
+    public function test_getUsuarioByEmail_onNonExistingRecords_returnsNull(): void
+    {
+        // Arrange
+        User::truncate();
+        $this->sut = new UsuarioRepository();
+        $email = $this->faker->email();
+        // Act
+        $response = $this->sut->getUsuarioByEmail($email);
+        // Assert
+        $this->assertNull($response);
+    }
+    public function test_getUsuariosByIdList_returnsCollection(): void
+    {
+        // Arrange
+        User::truncate();
+        User::factory(100)->create();
+        $ids = User::all()->pluck('id')->toArray();
+        $this->sut = new UsuarioRepository();
+        // Act
+        $response = $this->sut->getUsuariosByIdList($ids);
+        // Assert
+        $this->assertInstanceOf(Collection::class, $response);
+        $this->assertNotEmpty($response);
+        foreach ($response as $usuario) {
+            $this->assertInstanceOf(UsuarioDto::class, $usuario);
+        }
     }
 }

@@ -28,5 +28,6 @@ Route::middleware('api.jwt')->group(function () {
         Route::get('listagem', [UsuarioController::class, 'getUsuarios'])->name('lista.usuarios');
         Route::post('criar', [UsuarioController::class, 'createUsuario'])->name('criar.usuario');
         Route::put('alterar/senha', [UsuarioController::class, 'alterarSenha'])->name('alterar.senha.usuario')->withoutMiddleware('api.jwt');
+        Route::delete('deletar', [UsuarioController::class, 'deletarUsuarios'])->name('deletar.usuario');
     });
 });
