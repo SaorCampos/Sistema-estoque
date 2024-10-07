@@ -18,4 +18,5 @@ interface IUsuarioRepository
     public function deleteUsuario(string $id): bool;
     public function getUsuarioByEmail(string $email): ?UsuarioDto;
     public function getUsuariosByIdList(array $ids): Collection;
+    public function reativarUsuario(string $id): bool;
 }

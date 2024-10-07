@@ -10,9 +10,11 @@ use App\Core\Services\Usuario\IUsuarioDeleteService;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Usuario\UsuarioListingRequest;
 use App\Core\Services\Usuario\IUsuarioListingService;
+use App\Core\Services\Usuario\IUsuarioReativarService;
 use App\Http\Requests\Usuario\UsuarioAlterarSenhaRequest;
 use App\Http\Requests\Usuario\UsuarioCreateRequest;
 use App\Http\Requests\Usuario\UsuarioDeleteRequest;
+use App\Http\Requests\Usuario\UsuarioReativarRequest;
 
 class UsuarioController extends Controller
 {
@@ -21,6 +23,7 @@ class UsuarioController extends Controller
         private IUsuarioCreateService $usuarioCreateService,
         private IUsuarioAlterarSenhaService $usuarioAlterarSenhaService,
         private IUsuarioDeleteService $usuarioDeleteService,
+        private IUsuarioReativarService $usuarioReativarService,
     )
     {
     }
@@ -74,6 +77,22 @@ class UsuarioController extends Controller
             ->setData($usuario)
             ->setStatusCode(Response::HTTP_BAD_REQUEST)
             ->setMessage('Erro ao deletar usuarios!')
+            ->response();
+    }
+    public function reativarUsuarios(UsuarioReativarRequest $request): Response
+    {
+        $usuario = $this->usuarioReativarService->reativarUsuarios($request);
+        if($usuario === true){
+            return BaseResponse::builder()
+                ->setData($usuario)
+                ->setStatusCode(Response::HTTP_OK)
+                ->setMessage('Usuarios reativados com sucesso!')
+                ->response();
+        }
+        return BaseResponse::builder()
+            ->setData($usuario)
+            ->setStatusCode(Response::HTTP_BAD_REQUEST)
+            ->setMessage('Erro ao reativar usuarios!')
             ->response();
     }
 }

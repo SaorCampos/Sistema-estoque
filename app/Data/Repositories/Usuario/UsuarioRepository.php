@@ -134,4 +134,8 @@ class UsuarioRepository implements IUsuarioRepository
         }
         return $resultCollection;
     }
+    public function reativarUsuario(string $id): bool
+    {
+        return User::withTrashed()->where('id', $id)->restore();
+    }
 }

@@ -217,4 +217,15 @@ class UsuarioRepositoryTest extends TestCase
             $this->assertInstanceOf(UsuarioDto::class, $usuario);
         }
     }
+    public function test_reativarUsuario_returnsTrue(): void
+    {
+        // Arrange
+        User::truncate();
+        $usuario = User::factory()->createOne(['deletado_em' => now()]);
+        $this->sut = new UsuarioRepository();
+        // Act
+        $response = $this->sut->reativarUsuario($usuario->id);
+        // Assert
+        $this->assertTrue($response);
+    }
 }

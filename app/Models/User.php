@@ -28,6 +28,11 @@ class User extends Authentication implements JWTSubject
         'email',
         'password',
         'perfil_id',
+        'criado_em',
+        'criado_por',
+        'atualizado_em',
+        'atualizado_por',
+        'deletado_em'
     ];
 
     /**
