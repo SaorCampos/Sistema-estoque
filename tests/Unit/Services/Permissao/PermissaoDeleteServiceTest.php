@@ -23,7 +23,7 @@ class PermissaoDeleteServiceTest extends TestCase
         Mock::close();
     }
 
-    public function test_desativarPermissao_without_permissaion_throwsException(): void
+    public function test_desativarPermissao_without_permission_throwsException(): void
     {
         // Arrange
         $jwtToken = Mock::mock(JwtToken::class);

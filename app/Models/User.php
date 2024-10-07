@@ -4,22 +4,18 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authentication implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasUuids;
 
     public $incrementing = false;
-    public const CREATED_AT = 'criado_em';
-    public const UPDATED_AT = 'atualizado_em';
-    public const DELETED_AT = 'deletado_em';
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +28,11 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'perfil_id',
+        'criado_em',
+        'criado_por',
+        'atualizado_em',
+        'atualizado_por',
+        'deletado_em'
     ];
 
     /**
