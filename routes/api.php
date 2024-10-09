@@ -18,6 +18,7 @@ Route::middleware('api.jwt')->group(function () {
         Route::get('listagem/{id}', [PerfilController::class, 'getPermissoesByPerfilId']);
         Route::put('atualizar', [PerfilController::class, 'updatePerfil'])->name('atualizar.perfil.permissoes');
         Route::delete('deletar', [PerfilController::class, 'deletePerfil'])->name('deletar.perfil.permissoes');
+        Route::post('criar', [PerfilController::class, 'createPerfil'])->name('criar.perfil');
     });
     Route::prefix('permissao')->group(function () {
         Route::get('listagem', [PermissaoController::class, 'getPermissoes'])->name('lista.permissoes');

@@ -64,4 +64,8 @@ class PerfilRepository implements IPerfilRepository
         }
         return $perfil->mapTo(PerfilDto::class);
     }
+    public function createPerfil(Perfil $perfil): Perfil
+    {
+        return Perfil::create($perfil->toArray());
+    }
 }
