@@ -24,7 +24,7 @@ class PerfilUpdateTest extends TestCase
             'permissoesId' => [(string)Str::uuid()]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertUnauthorized();
@@ -40,7 +40,7 @@ class PerfilUpdateTest extends TestCase
             'permissoesId' => [(string)Str::uuid()]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertForbidden();
@@ -75,7 +75,7 @@ class PerfilUpdateTest extends TestCase
             'permissoesId' => [$permissaoId, $permissaoId]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(400);
@@ -110,7 +110,7 @@ class PerfilUpdateTest extends TestCase
             'permissoesId' => [(string)Str::uuid()]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(404);
@@ -152,7 +152,7 @@ class PerfilUpdateTest extends TestCase
             'permissoesId' => [(string)Str::uuid(), (string)Str::uuid()]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(400);
@@ -161,7 +161,6 @@ class PerfilUpdateTest extends TestCase
     public function test_updatePerfil_with_permissoes_that_doesnt_exist_returnsException(): void
     {
         // Arrange
-        User::truncate();
         User::truncate();
         Perfil::truncate();
         PerfilPermissao::truncate();
@@ -189,7 +188,7 @@ class PerfilUpdateTest extends TestCase
             'permissoesId' => [(string)Str::uuid(), (string)Str::uuid()]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(404);
@@ -229,7 +228,7 @@ class PerfilUpdateTest extends TestCase
             ]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(404);
@@ -270,11 +269,12 @@ class PerfilUpdateTest extends TestCase
             'permissoesId' => [(string)$permissaoForUpdateId1, (string)$permissaoForUpdateId2]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
+        $permissaoNome = DB::table('permissao')->where('id', '=', $permissaoForUpdateId2)->first()->nome;
         $response->assertStatus(400);
-        $this->assertEquals('Há uma ou mais permissões que não pertence ao usuário logado.', $responseBody['message']);
+        $this->assertEquals('Permissão '.$permissaoNome.' não é válida para o usuário logado.', $responseBody['message']);
     }
     public function test_updatePerfil_with_correctData_returnsOK(): void
     {
@@ -311,7 +311,7 @@ class PerfilUpdateTest extends TestCase
             ]
         ];
         // Act
-        $response = $this->putJson('/api/perfil/atualizar', $data);
+        $response = $this->putJson('/api/perfil/atualizar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(200);

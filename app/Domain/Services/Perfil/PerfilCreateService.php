@@ -2,19 +2,20 @@
 
 namespace App\Domain\Services\Perfil;
 
-use App\Core\ApplicationModels\JwtToken;
-use App\Data\Services\IDbTransaction;
-use App\Core\ApplicationModels\JwtTokenProvider;
+use App\Models\Perfil;
 use App\Core\Dtos\PerfilDetalhesDto;
-use App\Core\Services\Perfil\IPerfilUpdateService;
+use App\Data\Services\IDbTransaction;
+use App\Core\ApplicationModels\JwtToken;
+use App\Core\ApplicationModels\JwtTokenProvider;
+use App\Http\Requests\Perfil\PerfilCreateRequest;
+use App\Core\Services\Perfil\IPerfilCreateService;
 use App\Core\Repositories\Perfil\IPerfilRepository;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Core\Repositories\Permissao\IPermissaoRepository;
 use App\Core\Repositories\PerfilPermissao\IPerfilPermissaoRepository;
-use App\Http\Requests\Perfil\PerfilPermissaoUpdateRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Collection;
 
-class PerfilUpdateService implements IPerfilUpdateService
+class PerfilCreateService implements IPerfilCreateService
 {
     public function __construct(
         private IPerfilRepository $perfilRepository,
@@ -25,37 +26,32 @@ class PerfilUpdateService implements IPerfilUpdateService
     )
     {
     }
-    public function updatePermissoesPerfil(PerfilPermissaoUpdateRequest $request): PerfilDetalhesDto
+
+    private Perfil $perfilCriado;
+
+    public function createPerfil(PerfilCreateRequest $request): PerfilDetalhesDto
     {
         $jwtToken = $this->jwtTokenProvider->getJwtToken();
-        $jwtToken->validateRole('Editar Perfis');
-        $this->validateIfPermissoesAreDistinct($request);
-        $perfilForUpdate = $this->perfilRepository->getPerfilById($request->perfilId);
-        if(!$perfilForUpdate){
-            throw new HttpResponseException(response()->json(['message' => 'Perfil não encontrado.'], 404));
-        }
-        if($perfilForUpdate->nome === 'Admin'){
-            throw new HttpResponseException(response()->json(['message' => 'Perfil de Admin não pode ser alterado.'], 400));
-        }
-        $newPermissoes = $this->validateIfAllRequestedPermissoesBelongsToUser($request, $jwtToken);
-        $this->dbTransaction->run(function () use ($perfilForUpdate, $newPermissoes){
-            foreach ($newPermissoes as $permissao) {
-                $this->perfilPermissaoRepository->createPerfilPermissoes($perfilForUpdate->id, $permissao->id);
+        $jwtToken->validateRole('Criar Perfis');
+        $permissoesRequest = $this->validatePermissoes($request, $jwtToken);
+        $perfil = $this->mapPerfil($request);
+        $this->dbTransaction->run(function () use ($perfil, $permissoesRequest) {
+            $this->perfilCriado = $this->perfilRepository->createPerfil($perfil);
+            foreach ($permissoesRequest as $permissao) {
+                $this->perfilPermissaoRepository->createPerfilPermissoes($this->perfilCriado->id, $permissao->id);
             }
         });
-        $permissoesPerfil = $this->perfilRepository->getPermissoesByPerfilId($perfilForUpdate->id);
-        $perfilUpdated = new PerfilDetalhesDto($perfilForUpdate, $permissoesPerfil);
-        return $perfilUpdated;
+        $permissoes = $this->perfilRepository->getPermissoesByPerfilId($this->perfilCriado->id);
+        $perfilDto = $this->perfilRepository->getPerfilById($this->perfilCriado->id);
+        $perfilDetalhesDto = new PerfilDetalhesDto($perfilDto, $permissoes);
+        return $perfilDetalhesDto;
     }
-    private function validateIfPermissoesAreDistinct(PerfilPermissaoUpdateRequest $request)
+    private function validatePermissoes(PerfilCreateRequest $request, JwtToken $jwtToken): Collection
     {
         $permissaoIdsDistinct = array_unique($request->permissoesId);
         if (count($request->permissoesId) !== count($permissaoIdsDistinct)) {
             throw new HttpResponseException(response()->json(['message' => 'Permissões duplicadas não são permitidas.'], 400));
         }
-    }
-    private function validateIfAllRequestedPermissoesBelongsToUser(PerfilPermissaoUpdateRequest $request, JwtToken $jwtToken): Collection
-    {
         $permissaoUsuarioLogado = $jwtToken->permissoes;
         $permissoesRequest = $this->permissaoRepository->getPermissoesAtivasByIdList($request->permissoesId);
         if($permissoesRequest->isEmpty()){
@@ -67,5 +63,11 @@ class PerfilUpdateService implements IPerfilUpdateService
             }
         }
         return $permissoesRequest;
+    }
+    private function mapPerfil(PerfilCreateRequest $request): Perfil
+    {
+        $perfil = new Perfil();
+        $perfil->nome = $request->nome;
+        return $perfil;
     }
 }

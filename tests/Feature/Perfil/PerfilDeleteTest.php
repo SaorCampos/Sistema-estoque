@@ -24,7 +24,7 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [(string)Str::uuid()]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertUnauthorized();
@@ -40,7 +40,7 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [(string)Str::uuid()]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertForbidden();
@@ -74,7 +74,7 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [$permissaoId, $permissaoId]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(400);
@@ -109,7 +109,7 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [(string)Str::uuid()]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(404);
@@ -151,7 +151,7 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [(string)Str::uuid(), (string)Str::uuid()]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(400);
@@ -188,7 +188,7 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [(string)Str::uuid(), (string)Str::uuid()]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(404);
@@ -228,7 +228,7 @@ class PerfilDeleteTest extends TestCase
             ]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(404);
@@ -269,11 +269,12 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [(string)$permissaoForDeleteId1, (string)$permissaoForDeleteId2]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
+        $permissaoNome = DB::table('permissao')->where('id', '=', $permissaoForDeleteId2)->first()->nome;
         $response->assertStatus(400);
-        $this->assertEquals('Há uma ou mais permissões que não pertence ao usuário logado.', $responseBody['message']);
+        $this->assertEquals('Permissão '.$permissaoNome.' não é válida para o usuário logado.', $responseBody['message']);
     }
     public function test_deletePerfil_with_valid_data_returnsOk(): void
     {
@@ -323,7 +324,7 @@ class PerfilDeleteTest extends TestCase
             'permissoesId' => [(string)$permissaoForDeleteId1, (string)$permissaoForDeleteId2]
         ];
         // Act
-        $response = $this->deleteJson('/api/perfil/deletar', $data);
+        $response = $this->deleteJson('/api/perfil/deletar/permissoes', $data);
         $responseBody = json_decode($response->getContent(), true);
         // Assert
         $response->assertStatus(200);
