@@ -138,4 +138,15 @@ class PerfilRepositoryTest extends TestCase
         // Assert
         $this->assertInstanceOf(Collection::class, $response);
     }
+    public function test_createPerfil_withValidData_returnsPerfil(): void
+    {
+        // Arrange
+        Perfil::truncate();
+        $perfil = Perfil::factory()->makeOne();
+        $this->sut = new PerfilRepository();
+        // Act
+        $response = $this->sut->createPerfil($perfil);
+        // Assert
+        $this->assertInstanceOf(Perfil::class, $response);
+    }
 }

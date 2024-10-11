@@ -6,7 +6,6 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Core\Dtos\UsuarioDto;
-use Illuminate\Support\Facades\Hash;
 use App\Core\ApplicationModels\Pagination;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Data\Repositories\Usuario\UsuarioRepository;

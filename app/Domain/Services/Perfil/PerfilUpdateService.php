@@ -63,7 +63,7 @@ class PerfilUpdateService implements IPerfilUpdateService
         }
         foreach ($permissoesRequest as $permissao) {
             if (!in_array($permissao->nome, $permissaoUsuarioLogado)) {
-                throw new HttpResponseException(response()->json(['message' => 'Há uma ou mais permissões que não pertence ao usuário logado.'], 400));
+                throw new HttpResponseException(response()->json(['message' => 'Permissão '.$permissao->nome.' não é válida para o usuário logado.'], 400));
             }
         }
         return $permissoesRequest;
