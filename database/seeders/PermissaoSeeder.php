@@ -62,15 +62,6 @@ class PermissaoSeeder extends Seeder
                 'atualizado_em' => now(),
                 'deletado_em' => null
             ],
-            // [
-            //     'id' => Str::uuid(),
-            //     'nome' => 'Criar Permissões',
-            //     'criado_por' => 'Admin',
-            //     'criado_em' => now(),
-            //     'atualizado_por' => 'Admin',
-            //     'atualizado_em' => now(),
-            //     'deletado_em' => null
-            // ],
             [
                 'id' => Str::uuid(),
                 'nome' => 'Editar Permissões',
@@ -128,6 +119,69 @@ class PermissaoSeeder extends Seeder
             [
                 'id' => Str::uuid(),
                 'nome' => 'Ativar Usuários',
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+                'deletado_em' => null
+            ],
+            [
+                'id' => Str::uuid(),
+                'nome' => 'Criar Items',
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+                'deletado_em' => null
+            ],
+            [
+                'id' => Str::uuid(),
+                'nome' => 'Editar Items',
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+                'deletado_em' => null
+            ],
+            [
+                'id' => Str::uuid(),
+                'nome' => 'Deletar Items',
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+                'deletado_em' => null
+            ],
+            [
+                'id' => Str::uuid(),
+                'nome' => 'Listar Items',
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+                'deletado_em' => null
+            ],
+            [
+                'id' => Str::uuid(),
+                'nome' => 'Listar Movimentações',
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+                'deletado_em' => null
+            ],
+            [
+                'id' => Str::uuid(),
+                'nome' => 'Criar Movimentações',
+                'criado_por' => 'Admin',
+                'criado_em' => now(),
+                'atualizado_por' => 'Admin',
+                'atualizado_em' => now(),
+                'deletado_em' => null
+            ],
+            [
+                'id' => Str::uuid(),
+                'nome' => 'Editar Movimentações',
                 'criado_por' => 'Admin',
                 'criado_em' => now(),
                 'atualizado_por' => 'Admin',

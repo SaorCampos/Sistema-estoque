@@ -2,12 +2,9 @@
 
 namespace App\Core\ApplicationModels;
 use App\Core\Traits\AutoMapper;
-use App\Core\Traits\CreationWithRequest;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Nette\ArgumentOutOfRangeException;
-use Ramsey\Collection\Exception\InvalidPropertyOrMethod;
-use RuntimeException;
 use Exception;
 
 class Pagination
@@ -40,7 +37,7 @@ class Pagination
             throw new InvalidArgumentException('PerPage must to be positive.');
         }
         if ($this->perPage > 1000) {
-            throw new ArgumentOutOfRangeException('PerPage must to be between 1 and 1000.');            
+            throw new ArgumentOutOfRangeException('PerPage must to be between 1 and 1000.');
         }
     }
 }
