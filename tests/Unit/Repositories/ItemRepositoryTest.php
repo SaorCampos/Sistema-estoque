@@ -13,7 +13,7 @@ use App\Core\Repositories\Item\IItemRepository;
 use App\Http\Requests\Item\ItemsListingRequest;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ItemRepositoyTest extends TestCase
+class ItemRepositoryTest extends TestCase
 {
     use DatabaseTransactions;
 

@@ -2,9 +2,11 @@
 
 namespace App\Providers\DependencyInjection;
 
+use App\Core\Services\Item\IItemCreateService;
+use App\Data\Repositories\Item\ItemRepository;
 use App\Core\Repositories\Item\IItemRepository;
 use App\Core\Services\Item\IItemListingService;
-use App\Data\Repositories\Item\ItemRepository;
+use App\Domain\Services\Item\ItemCreateService;
 use App\Domain\Services\Item\ItemListingService;
 
 class ItemDi extends DependencyInjection
@@ -13,6 +15,7 @@ class ItemDi extends DependencyInjection
     {
         return [
             [IItemListingService::class, ItemListingService::class],
+            [IItemCreateService::class, ItemCreateService::class],
         ];
     }
 

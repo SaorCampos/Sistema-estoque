@@ -35,5 +35,6 @@ Route::middleware('api.jwt')->group(function () {
     });
     Route::prefix('itens')->group(function () {
         Route::get('listagem', [ItemController::class, 'getItems'])->name('lista.itens');
+        Route::post('criar', [ItemController::class, 'createItem'])->name('criar.item');
     });
 });
