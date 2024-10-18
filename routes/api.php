@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PermissaoController;
 use App\Http\Controllers\UsuarioController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('api.jwt')->group(function () {
@@ -31,5 +31,10 @@ Route::middleware('api.jwt')->group(function () {
         Route::put('alterar/senha', [UsuarioController::class, 'alterarSenha'])->name('alterar.senha.usuario')->withoutMiddleware('api.jwt');
         Route::delete('deletar', [UsuarioController::class, 'deletarUsuarios'])->name('deletar.usuario');
         Route::put('reativar', [UsuarioController::class, 'reativarUsuarios'])->name('reativar.usuario');
+    });
+    Route::prefix('itens')->group(function () {
+        Route::get('listagem', [ItemController::class, 'getItems'])->name('lista.itens');
+        Route::post('criar', [ItemController::class, 'createItem'])->name('criar.item');
+        Route::put('alterar', [ItemController::class, 'updateItem'])->name('alterar.item');
     });
 });

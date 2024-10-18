@@ -25,6 +25,7 @@ abstract class DependencyInjection
             new PermissaoDi($app),
             new PerfilPermissaoDi($app),
             new UsuarioDi($app),
+            new ItemDi($app),
         ]);
     }
 
