@@ -7,14 +7,17 @@ use App\Core\ApplicationModels\Pagination;
 use App\Core\Services\Item\IItemCreateService;
 use Symfony\Component\HttpFoundation\Response;
 use App\Core\Services\Item\IItemListingService;
+use App\Core\Services\Item\IItemUpdateService;
 use App\Http\Requests\Item\ItemCreateRequest;
 use App\Http\Requests\Item\ItemsListingRequest;
+use App\Http\Requests\Item\ItemUpdateRequest;
 
 class ItemController extends Controller
 {
     public function __construct(
         private IItemListingService $itemListingService,
         private IItemCreateService $itemCreateService,
+        private IItemUpdateService $itemUpdateService,
     )
     {}
 
@@ -35,6 +38,14 @@ class ItemController extends Controller
         return BaseResponse::builder()
             ->setData($item)
             ->setMessage('Item criado com sucesso!')
+            ->response();
+    }
+    public function updateItem(ItemUpdateRequest $request): Response
+    {
+        $item = $this->itemUpdateService->updateItem($request);
+        return BaseResponse::builder()
+            ->setData($item)
+            ->setMessage('Item atualizado com sucesso!')
             ->response();
     }
 }
