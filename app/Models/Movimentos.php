@@ -10,6 +10,7 @@ class Movimentos extends Entity
 {
     use HasFactory, HasUuids;
 
+    const DELETED_AT = null;
     protected $table = 'movimentos';
     public $incrementing = false;
 
@@ -18,7 +19,7 @@ class Movimentos extends Entity
         'user_id',
         'quantidade',
         'tipo',
-        'data',
+        'data_movimentacao',
         'nota_fiscal',
         'fornecedor',
         'numero_controle_saida',

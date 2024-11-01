@@ -57,7 +57,7 @@ class ItemUpdateServiceTest extends TestCase
         // Act
         $this->sut->updateItem($request);
     }
-    public function test_updateItem_with_existingItemReturnsTrue(): void
+    public function test_updateItem_with_existingItemReturnsItemDto(): void
     {
         // Assert
         $jwtToken = Mockery::mock(JwtToken::class, function (MockInterface $mock){

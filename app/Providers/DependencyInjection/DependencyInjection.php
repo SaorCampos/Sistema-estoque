@@ -26,6 +26,7 @@ abstract class DependencyInjection
             new PerfilPermissaoDi($app),
             new UsuarioDi($app),
             new ItemDi($app),
+            new MovimentoDi($app),
         ]);
     }
 
