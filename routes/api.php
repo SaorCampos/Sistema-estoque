@@ -40,5 +40,6 @@ Route::middleware('api.jwt')->group(function () {
     });
     Route::prefix('movimentacoes')->group(function () {
         Route::get('listagem', [MovimentoController::class, 'getAllMovimetacoes'])->name('lista.movimentacoes');
+        Route::post('criar/entrada', [MovimentoController::class, 'createMovimentacaoEntrada'])->name('criar.movimentacao.entrada');
     });
 });

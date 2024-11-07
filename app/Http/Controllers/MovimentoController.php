@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Support\Models\BaseResponse;
 use App\Core\ApplicationModels\Pagination;
+use App\Core\Services\Movimento\IMovimentoEntradaService;
 use Symfony\Component\HttpFoundation\Response;
 use App\Core\Services\Movimento\IMovimentoListingService;
+use App\Http\Requests\Movimento\MovimentoEntradaRequest;
 use App\Http\Requests\Movimento\MovimentosListingRequest;
 
 class MovimentoController extends Controller
 {
     public function __construct(
-        private IMovimentoListingService $movimentoListingService
+        private IMovimentoListingService $movimentoListingService,
+        private IMovimentoEntradaService $movimentoEntradaService,
     )
     {}
 
@@ -24,6 +27,14 @@ class MovimentoController extends Controller
         return BaseResponse::builder()
             ->setData($list)
             ->setMessage('Movimentações listadas com sucesso!')
+            ->response();
+    }
+    public function createMovimentacaoEntrada(MovimentoEntradaRequest $request): Response
+    {
+        $movimentacoes = $this->movimentoEntradaService->createMovimentacaoEntrada($request);
+        return BaseResponse::builder()
+            ->setData($movimentacoes)
+            ->setMessage('Movimentações criada com sucesso!')
             ->response();
     }
 }
