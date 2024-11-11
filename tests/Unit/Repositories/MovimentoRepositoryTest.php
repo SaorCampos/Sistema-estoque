@@ -25,6 +25,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $pagination = new Pagination();
@@ -45,6 +46,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $request->tipoMovimentacao = 'ENTRADA';
@@ -67,6 +69,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $request->tipoMovimentacao = 'SAIDA';
@@ -89,6 +92,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $item = Items::get()->first();
@@ -112,6 +116,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $item = Items::get()->first();
@@ -135,6 +140,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $movimento = Movimentos::get()->first();
@@ -158,6 +164,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $movimento = Movimentos::get()->first();
@@ -181,6 +188,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $movimento = Movimentos::get()->first();
@@ -204,6 +212,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $movimento = Movimentos::get()->first();
@@ -227,6 +236,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $movimento = Movimentos::factory()->createOne();
@@ -251,6 +261,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         Movimentos::factory(100)->create();
         $request = new MovimentosListingRequest();
         $movimento = Movimentos::factory()->createOne();
@@ -278,6 +289,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         $movimento = Movimentos::factory()->makeOne();
         $this->sut = new MovimentoRepository();
         // Act
@@ -297,6 +309,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         $movimento = Movimentos::factory()->createOne();
         $this->sut = new MovimentoRepository();
         // Act
@@ -309,6 +322,7 @@ class MovimentoRepositoryTest extends TestCase
     {
         // Arrange
         Movimentos::truncate();
+        User::truncate();
         $movimentos = Movimentos::factory(10)->create();
         $ids = $movimentos->pluck('id')->toArray();
         $this->sut = new MovimentoRepository();
