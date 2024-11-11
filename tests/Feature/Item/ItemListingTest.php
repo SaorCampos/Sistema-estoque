@@ -224,7 +224,6 @@ class ItemListingTest extends TestCase
         DB::table('perfil_permissao')->insert($perfilPermissoes->toArray());
         $this->actingAs($user, 'jwt');
         Items::factory(100)->create();
-        $item = Items::factory()->createOne();
         $response = $this->get(route('lista.itens', [
             'page' => 1,
             'perPage' => 10,

@@ -29,8 +29,8 @@ class ItemRepository implements IItemRepository
                 'i.atualizado_em',
                 'i.deletado_em'
             ])
-            ->where($this->getFilters($request))
             ->withTrashed()
+            ->where($this->getFilters($request))
             ->paginate($pagination->perPage, ['*'], 'page', $pagination->page);
         return PaginatedList::fromPaginatedQuery(
             query: $query,

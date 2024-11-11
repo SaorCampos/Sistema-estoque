@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MovimentoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PermissaoController;
 use App\Http\Controllers\UsuarioController;
@@ -36,5 +37,10 @@ Route::middleware('api.jwt')->group(function () {
         Route::get('listagem', [ItemController::class, 'getItems'])->name('lista.itens');
         Route::post('criar', [ItemController::class, 'createItem'])->name('criar.item');
         Route::put('alterar', [ItemController::class, 'updateItem'])->name('alterar.item');
+    });
+    Route::prefix('movimentacoes')->group(function () {
+        Route::get('listagem', [MovimentoController::class, 'getAllMovimetacoes'])->name('lista.movimentacoes');
+        Route::post('criar/entrada', [MovimentoController::class, 'createMovimentacaoEntrada'])->name('criar.movimentacao.entrada');
+        Route::post('criar/saida', [MovimentoController::class, 'createMovimentacaoSaida'])->name('criar.movimentacao.saida');
     });
 });
