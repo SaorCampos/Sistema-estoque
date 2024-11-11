@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Movimentos;
 use App\Models\Perfil;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -42,6 +43,7 @@ class DatabaseSeeder extends Seeder
         [
             PermissaoSeeder::class,
             PerfilPermissaoSeeder::class,
+            MovimentacaoSeeder::class,
         ]
        );
     }
