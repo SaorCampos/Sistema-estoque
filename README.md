@@ -1,9 +1,10 @@
-# Sistema_Estoque
+# Sistema Estoque
 
 O Sistema de Estoque é um CRUD construído em PHP 8 e Laravel, estruturado em arquitetura hexagonal. O projeto implementa injeção de dependência, autenticação JWT e gerenciamento de perfis e permissões para controle de acesso.
 
 ## Tecnologias e Requisitos:
 * Linguagem: PHP 8+
+* Gerenciador de pacotes: Composer
 * Framework: Laravel
 * Banco de Dados: PostgreSQL
 * Autenticação: JWT (JSON Web Token)
@@ -24,7 +25,7 @@ composer install
 ```bash
 cp .env.example .env
 ```
-4. Configure as variáveis de ambiente: Defina as credenciais de banco de dados, informações JWT e outras variáveis em ``.env``:
+4. Configure as variáveis de ambiente: Defina as credenciais de banco de dados, informações JWT e outras variáveis em ``.env`` exemplo:
 ```
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
@@ -75,3 +76,34 @@ php artisan test tests/Unit/Repositories
 ```bash
 php artisan test tests/Unit/Services
 ```
+# Funcionalidades
+1. Gestão de Movimentações de Estoque:
+* Entradas: Registrar a entrada de itens no estoque com quantidade, nota fiscal, fornecedor, e data de movimentação.
+* Saídas: Registrar a saída de itens, incluindo número de controle, destino e data.
+2. Autenticação e Controle de Acesso:
+* JWT: Controle de autenticação com token JWT.
+* Perfis e Permissões: Controle granular para diferentes níveis de acesso.
+3. Histórico e Auditoria:
+* Registra atualizações de cada entrada e saída para garantir a rastreabilidade.
+
+# Regras de Negócio
+1. Unicidade da Nota Fiscal e Número de Controle de Saída: Cada entrada de estoque deve ter uma nota fiscal única e cada saída seu número de controle.
+
+2. Validação de Quantidade: Verifica se há quantidade suficiente antes de permitir uma saída.
+
+3. Controle de Acesso: Usuários precisam ter as permissões adequadas para manipular dados de estoque.
+
+# Estrutura da Arquitetura Hexagonal
+A arquitetura do projeto é dividida em camadas, garantindo separação de responsabilidades e facilitando testes e manutenção:
+
+1. Camada de Aplicação:
+* Gerencia regras de negócio e lógica de controle.
+* Inclui ``controllers``, ``services``, e ``use cases`` que interagem com as demais camadas.
+
+2. Camada de Domínio:
+* Contém as entidades e lógica de domínio central do sistema.
+* Define as regras de negócio e contratos de interface ``Services``.
+
+3. Camada de Infraestrutura:
+* Concentra as interações com o banco de dados e recursos externos.
+* Inclui repositórios e implementações de interfaces para persistência, como o ``MovimentosRepository``.
