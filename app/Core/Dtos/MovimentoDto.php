@@ -19,6 +19,7 @@ class MovimentoDto implements IArraySerializer
     public string $dataMovimentacao;
     public ?int $notaFiscal;
     public ?string $fornecedor;
+    public ?int $numeroControleSaida;
     public ?string $localDestino;
     public string $usuarioResponsavel;
     public ?string $criadoEm;

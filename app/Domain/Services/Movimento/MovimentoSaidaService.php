@@ -46,6 +46,10 @@ class MovimentoSaidaService implements IMovimentoSaidaService
     }
     private function validateItem(array $saida): ItemDto
     {
+        $movimentoDto = $this->movimentoRepository->getMovimentoByNumeroControleSaida($saida['numeroControleSaida']);
+        if($movimentoDto){
+            throw new HttpResponseException(response()->json(['message' => 'Número de controle de saída '. $saida['numeroControleSaida'] . ' já cadastrado.'], 400));
+        }
         $item = $this->itemRepository->getItemById($saida['itemId']);
         if(!$item) {
             throw new HttpResponseException(response()->json(['message' => 'Item' .$saida['itemId']. 'não encotrado.'], 404));

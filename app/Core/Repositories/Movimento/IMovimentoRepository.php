@@ -13,6 +13,8 @@ interface IMovimentoRepository
 {
     public function getAllMovimetacoes(MovimentosListingRequest $request, Pagination $pagination): PaginatedList;
     public function createMovimentacao(Movimentos $movimento): Movimentos;
-    public function getMovimentoById(string $id): MovimentoDto;
+    public function getMovimentoById(string $id): ?MovimentoDto;
     public function getMovimentacoesByIdList(array $ids): Collection;
+    public function getMovimentacaoByNotaFiscal(int $notaFiscal): ?MovimentoDto;
+    public function getMovimentoByNumeroControleSaida(int $numeroControleSaida): ?MovimentoDto;
 }

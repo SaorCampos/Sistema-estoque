@@ -3,6 +3,7 @@
 namespace App\Domain\Services\Movimento;
 
 use App\Models\Items;
+use App\Core\Dtos\ItemDto;
 use App\Models\Movimentos;
 use Illuminate\Support\Collection;
 use App\Data\Services\IDbTransaction;
@@ -32,10 +33,7 @@ class MovimentoEntradaService implements IMovimentoEntradaService
         $this->movimentacoesId = [];
         $this->dbTransaction->run(function () use ($request) {
            foreach ($request->entradas as $entrada) {
-                $item = $this->itemRepository->getItemById($entrada['itemId']);
-                if (!$item) {
-                    throw new HttpResponseException(response()->json(['message' => 'Item' .$entrada['itemId']. 'não encotrado.'], 404));
-                }
+                $item = $this->validateItem($entrada);
                 $ItemforUpdate = $this->mapItemEntrada($entrada);
                 $ItemforUpdate->estoque += $item->quantidadeEstoque;
                 $this->itemRepository->updateItem($item->id, $ItemforUpdate);
@@ -45,6 +43,18 @@ class MovimentoEntradaService implements IMovimentoEntradaService
            }
        });
        return $this->movimentoRepository->getMovimentacoesByIdList($this->movimentacoesId);
+    }
+    private function validateItem(array $entrada): ItemDto
+    {
+        $movimentoDto = $this->movimentoRepository->getMovimentacaoByNotaFiscal($entrada['notaFiscal']);
+        if($movimentoDto){
+            throw new HttpResponseException(response()->json(['message' => 'Nota fiscal ' .$entrada['notaFiscal']. ' já cadastrada.'], 400));
+        }
+        $item = $this->itemRepository->getItemById($entrada['itemId']);
+        if(!$item) {
+            throw new HttpResponseException(response()->json(['message' => 'Item' .$entrada['itemId']. 'não encotrado.'], 404));
+        }
+        return $item;
     }
     private function mapItemEntrada(array $request): Items
     {

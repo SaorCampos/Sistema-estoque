@@ -335,4 +335,52 @@ class MovimentoRepositoryTest extends TestCase
             $this->assertContains($item->movimentacaoId, $ids);
         }
     }
+    public function test_getMovimentacaoByNotaFiscal_onValidData_returnsMovimentoDto(): void
+    {
+        // Arrange
+        Movimentos::truncate();
+        User::truncate();
+        $movimento = Movimentos::factory()->createOne();
+        $this->sut = new MovimentoRepository();
+        // Act
+        $result = $this->sut->getMovimentacaoByNotaFiscal($movimento->nota_fiscal);
+        // Assert
+        $this->assertInstanceOf(MovimentoDto::class, $result);
+        $this->assertEquals($movimento->nota_fiscal, $result->notaFiscal);
+    }
+    public function test_getMovimentacaoByNotaFiscal_onInvalidData_returnsNull(): void
+    {
+        // Arrange
+        Movimentos::truncate();
+        User::truncate();
+        $this->sut = new MovimentoRepository();
+        // Act
+        $result = $this->sut->getMovimentacaoByNotaFiscal(rand(1, 1000));
+        // Assert
+        $this->assertNull($result);
+    }
+    public function test_getMovimentoByNumeroControleSaida_onValidData_returnsMovimentoDto(): void
+    {
+        // Arrange
+        Movimentos::truncate();
+        User::truncate();
+        $movimento = Movimentos::factory()->createOne();
+        $this->sut = new MovimentoRepository();
+        // Act
+        $result = $this->sut->getMovimentoByNumeroControleSaida($movimento->numero_controle_saida);
+        // Assert
+        $this->assertInstanceOf(MovimentoDto::class, $result);
+        $this->assertEquals($movimento->numero_controle_saida, $result->numeroControleSaida);
+    }
+    public function test_getMovimentoByNumeroControleSaida_onInvalidData_returnsNull(): void
+    {
+        // Arrange
+        Movimentos::truncate();
+        User::truncate();
+        $this->sut = new MovimentoRepository();
+        // Act
+        $result = $this->sut->getMovimentoByNumeroControleSaida(rand(1, 1000));
+        // Assert
+        $this->assertNull($result);
+    }
 }

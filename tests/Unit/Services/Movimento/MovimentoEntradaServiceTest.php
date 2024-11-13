@@ -55,7 +55,11 @@ class MovimentoEntradaServiceTest extends TestCase
             ->andReturn($jwtToken);
         });
         /** @var IMovimentoRepository $movimentoRepository */
-        $movimentoRepository = Mockery::mock(IMovimentoRepository::class);
+        $movimentoRepository = Mockery::mock(IMovimentoRepository::class, function (MockInterface $mock){
+            $mock->shouldReceive('getMovimentacaoByNotaFiscal')
+                ->once()
+                ->andReturn(null);
+        });
         /** @var IItemRepository $itemRepository */
         $itemRepository = Mockery::mock(IItemRepository::class, function (MockInterface $mock) {
             $mock->shouldReceive('getItemById')
@@ -121,6 +125,9 @@ class MovimentoEntradaServiceTest extends TestCase
         });
         /** @var IMovimentoRepository $movimentoRepository */
         $movimentoRepository = Mockery::mock(IMovimentoRepository::class, function (MockInterface $mock) use ($expectedCreateResult, $expectedResult) {
+            $mock->shouldReceive('getMovimentacaoByNotaFiscal')
+                ->once()
+                ->andReturn(null);
             $mock->shouldReceive('createMovimentacao')
                 ->once()
                 ->andReturn($expectedCreateResult);
